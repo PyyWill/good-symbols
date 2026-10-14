@@ -1,0 +1,3866 @@
+{
+ "task": "block",
+ "title": "Block (Shadow Hand in-hand reorientation, DexCube)",
+ "setting": 1,
+ "instance_note": "setting 1 of the task (assets/setting_1.npz; fixed reset: scripts_fast TaskAdapter.reset ignores the seed and the IsaacLab reset is deterministic)",
+ "controller": {
+  "name": "Ours: symbol-guided predicate MPC (MILP_setting/scripts_fast/predicate_mpc.run_predicate_mpc)",
+  "description": "offline plan-word grammar from E2E-teacher demonstrations; per step a zero-LP bound-propagation search proposes H-step symbol words; each word psi=Wz is injected into the native problem's LP relaxation (conditioned LP, HiGHS); the best word's first action is executed",
+  "horizon": 2,
+  "time_limit_s": 5.0,
+  "max_steps": 30,
+  "certificate_checks": {
+   "W in {0,+-1}": true,
+   "(2) R=UR W+VR E": true,
+   "(1) P=Ptil+UP W+VP E": true,
+   "(3) [Ptil;E;W] TU": true
+  }
+ },
+ "success": true,
+ "n_steps": 10,
+ "final_rotation_error_rad": 0.071334,
+ "initial_rotation_error_rad": 2.149192,
+ "success_criterion": "||error|| <= 0.10 where error = rotation vector (rad) of R^T R_goal",
+ "control_period_s": 0.016667,
+ "fps": 30,
+ "frames_per_step": 20,
+ "first_state_frame": 30,
+ "n_frames": 276,
+ "duration_s": 9.2,
+ "frame_of_step": "frame(t) = 30 + 20*t ; video_time(t) = frame(t)/30 s",
+ "slow_motion_factor": 40.0,
+ "video_note": "Each control step = 2 physics sub-steps (1/120 s each). Every recorded sub-step pose is rendered exactly; 9 in-between frames per sub-step interpolate joint angles linearly and the object orientation by slerp (visual slow motion only). The first 30 frames hold the initial state and the last 45 hold the final state. The top-left inset shows the goal orientation rendered from the same camera.",
+ "camera": {
+  "eye": [
+   0.207,
+   -0.626,
+   0.642
+  ],
+  "target": [
+   0.03,
+   -0.36,
+   0.505
+  ],
+  "resolution": [
+   1280,
+   720
+  ],
+  "renderer": "IsaacLab 2.3 / Isaac Sim 5.1 RTX (rgb annotator of the viewport camera), ground hidden, default dome light"
+ },
+ "object_visual": "DexCube texture: faces carry letters (see faces[].texture_letter)",
+ "fingers": [
+  {
+   "name": "ff",
+   "label": "first (index) finger"
+  },
+  {
+   "name": "mf",
+   "label": "middle finger"
+  },
+  {
+   "name": "rf",
+   "label": "ring finger"
+  },
+  {
+   "name": "lf",
+   "label": "little finger"
+  },
+  {
+   "name": "th",
+   "label": "thumb"
+  }
+ ],
+ "faces": [
+  {
+   "index": 0,
+   "name": "palm",
+   "label": "palm face",
+   "normal_body": [
+    0.0,
+    -1.0,
+    0.0
+   ],
+   "texture_letter": "M",
+   "texture_color": "red"
+  },
+  {
+   "index": 1,
+   "name": "dorsal",
+   "label": "dorsal face",
+   "normal_body": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "texture_letter": "E",
+   "texture_color": "yellow"
+  },
+  {
+   "index": 2,
+   "name": "thumb_side",
+   "label": "thumb-side face",
+   "normal_body": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "texture_letter": "X",
+   "texture_color": "blue"
+  },
+  {
+   "index": 3,
+   "name": "little_side",
+   "label": "little-side face",
+   "normal_body": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "texture_letter": "R",
+   "texture_color": "white"
+  },
+  {
+   "index": 4,
+   "name": "distal",
+   "label": "distal face",
+   "normal_body": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "texture_letter": "L",
+   "texture_color": "green"
+  },
+  {
+   "index": 5,
+   "name": "proximal",
+   "label": "proximal face",
+   "normal_body": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "texture_letter": "D",
+   "texture_color": "cyan"
+  }
+ ],
+ "faces_note": "Faces are fixed body-frame faces of the object, named after the side of the hand they face in the reference grasp; the names stay attached to the object as it rotates.",
+ "factor_names": [
+  {
+   "index": 0,
+   "name": "s_to_ff",
+   "short": "ff active",
+   "group": "finger_active",
+   "label": "first (index) finger is one of the contact digits"
+  },
+  {
+   "index": 1,
+   "name": "s_to_mf",
+   "short": "mf active",
+   "group": "finger_active",
+   "label": "middle finger is one of the contact digits"
+  },
+  {
+   "index": 2,
+   "name": "s_to_rf",
+   "short": "rf active",
+   "group": "finger_active",
+   "label": "ring finger is one of the contact digits"
+  },
+  {
+   "index": 3,
+   "name": "s_to_lf",
+   "short": "lf active",
+   "group": "finger_active",
+   "label": "little finger is one of the contact digits"
+  },
+  {
+   "index": 4,
+   "name": "s_to_th",
+   "short": "th active",
+   "group": "finger_active",
+   "label": "thumb is one of the contact digits"
+  },
+  {
+   "index": 5,
+   "name": "th_to_palm",
+   "short": "th→palm",
+   "group": "assignment",
+   "label": "thumb contacts the palm face"
+  },
+  {
+   "index": 6,
+   "name": "th_to_distal",
+   "short": "th→distal",
+   "group": "assignment",
+   "label": "thumb contacts the distal face"
+  },
+  {
+   "index": 7,
+   "name": "th_to_thumb_side",
+   "short": "th→thumb_side",
+   "group": "assignment",
+   "label": "thumb contacts the thumb-side face"
+  },
+  {
+   "index": 8,
+   "name": "ff_to_little_side",
+   "short": "ff→little_side",
+   "group": "assignment",
+   "label": "first (index) finger contacts the little-side face"
+  },
+  {
+   "index": 9,
+   "name": "ff_to_thumb_side",
+   "short": "ff→thumb_side",
+   "group": "assignment",
+   "label": "first (index) finger contacts the thumb-side face"
+  },
+  {
+   "index": 10,
+   "name": "mf_to_dorsal",
+   "short": "mf→dorsal",
+   "group": "assignment",
+   "label": "middle finger contacts the dorsal face"
+  },
+  {
+   "index": 11,
+   "name": "rf_to_dorsal",
+   "short": "rf→dorsal",
+   "group": "assignment",
+   "label": "ring finger contacts the dorsal face"
+  },
+  {
+   "index": 12,
+   "name": "lf_to_proximal",
+   "short": "lf→proximal",
+   "group": "assignment",
+   "label": "little finger contacts the proximal face"
+  },
+  {
+   "index": 13,
+   "name": "palm_to_t",
+   "short": "palm occupied",
+   "group": "face_occupied",
+   "label": "palm face is contacted by some digit"
+  },
+  {
+   "index": 14,
+   "name": "dorsal_to_t",
+   "short": "dorsal occupied",
+   "group": "face_occupied",
+   "label": "dorsal face is contacted by some digit"
+  },
+  {
+   "index": 15,
+   "name": "thumb_side_to_t",
+   "short": "thumb_side occupied",
+   "group": "face_occupied",
+   "label": "thumb-side face is contacted by some digit"
+  },
+  {
+   "index": 16,
+   "name": "little_side_to_t",
+   "short": "little_side occupied",
+   "group": "face_occupied",
+   "label": "little-side face is contacted by some digit"
+  },
+  {
+   "index": 17,
+   "name": "distal_to_t",
+   "short": "distal occupied",
+   "group": "face_occupied",
+   "label": "distal face is contacted by some digit"
+  },
+  {
+   "index": 18,
+   "name": "proximal_to_t",
+   "short": "proximal occupied",
+   "group": "face_occupied",
+   "label": "proximal face is contacted by some digit"
+  },
+  {
+   "index": 19,
+   "name": "s_to_t",
+   "short": "idle (2 contacts)",
+   "group": "idle_slot",
+   "label": "idle unit: only two digits are in contact (regrasp phase)"
+  }
+ ],
+ "n_d": 20,
+ "W": [
+  [
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ ],
+ "W_rows": [
+  {
+   "row": 0,
+   "factor_index": 0,
+   "factor_name": "s_to_ff",
+   "short": "ff active"
+  },
+  {
+   "row": 1,
+   "factor_index": 1,
+   "factor_name": "s_to_mf",
+   "short": "mf active"
+  },
+  {
+   "row": 2,
+   "factor_index": 2,
+   "factor_name": "s_to_rf",
+   "short": "rf active"
+  },
+  {
+   "row": 3,
+   "factor_index": 3,
+   "factor_name": "s_to_lf",
+   "short": "lf active"
+  },
+  {
+   "row": 4,
+   "factor_index": 4,
+   "factor_name": "s_to_th",
+   "short": "th active"
+  },
+  {
+   "row": 5,
+   "factor_index": 5,
+   "factor_name": "th_to_palm",
+   "short": "th→palm"
+  },
+  {
+   "row": 6,
+   "factor_index": 6,
+   "factor_name": "th_to_distal",
+   "short": "th→distal"
+  },
+  {
+   "row": 7,
+   "factor_index": 8,
+   "factor_name": "ff_to_little_side",
+   "short": "ff→little_side"
+  }
+ ],
+ "W_note": "Unit rows: psi = W z selects 8 of the 20 binary factors; the other 12 are fixed by the flow constraints E z = e (3 units from source to sink), so psi determines z uniquely.",
+ "goal_contact_mode": {
+  "z": [
+   1,
+   0,
+   0,
+   1,
+   1,
+   0,
+   1,
+   0,
+   0,
+   1,
+   0,
+   0,
+   1,
+   0,
+   0,
+   1,
+   0,
+   1,
+   1,
+   0
+  ],
+  "contacts": {
+   "ff": "thumb_side",
+   "mf": null,
+   "rf": null,
+   "lf": "proximal",
+   "th": "distal"
+  },
+  "note": "z_reference[-1]: terminal contact mode rewarded by the MILP cost"
+ },
+ "graph": {
+  "nodes": [
+   {
+    "id": 0,
+    "psi": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": "thumb_side"
+    },
+    "label": "lf→proximal, th→thumb_side",
+    "idle": 1
+   },
+   {
+    "id": 1,
+    "psi": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": "distal"
+    },
+    "label": "lf→proximal, th→distal",
+    "idle": 1
+   },
+   {
+    "id": 2,
+    "psi": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": "palm"
+    },
+    "label": "lf→proximal, th→palm",
+    "idle": 1
+   },
+   {
+    "id": 3,
+    "psi": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": null,
+     "rf": "dorsal",
+     "lf": null,
+     "th": "palm"
+    },
+    "label": "rf→dorsal, th→palm",
+    "idle": 1
+   },
+   {
+    "id": 4,
+    "psi": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": null,
+     "rf": "dorsal",
+     "lf": "proximal",
+     "th": "thumb_side"
+    },
+    "label": "rf→dorsal, lf→proximal, th→thumb_side",
+    "idle": 0
+   },
+   {
+    "id": 5,
+    "psi": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     1,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": null,
+     "rf": "dorsal",
+     "lf": "proximal",
+     "th": "distal"
+    },
+    "label": "rf→dorsal, lf→proximal, th→distal",
+    "idle": 0
+   },
+   {
+    "id": 6,
+    "psi": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": null,
+     "rf": "dorsal",
+     "lf": "proximal",
+     "th": "palm"
+    },
+    "label": "rf→dorsal, lf→proximal, th→palm",
+    "idle": 0
+   },
+   {
+    "id": 7,
+    "psi": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": "dorsal",
+     "rf": null,
+     "lf": null,
+     "th": "palm"
+    },
+    "label": "mf→dorsal, th→palm",
+    "idle": 1
+   },
+   {
+    "id": 8,
+    "psi": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": "dorsal",
+     "rf": null,
+     "lf": "proximal",
+     "th": "thumb_side"
+    },
+    "label": "mf→dorsal, lf→proximal, th→thumb_side",
+    "idle": 0
+   },
+   {
+    "id": 9,
+    "psi": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": "dorsal",
+     "rf": null,
+     "lf": "proximal",
+     "th": "distal"
+    },
+    "label": "mf→dorsal, lf→proximal, th→distal",
+    "idle": 0
+   },
+   {
+    "id": 10,
+    "psi": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": null,
+     "mf": "dorsal",
+     "rf": null,
+     "lf": "proximal",
+     "th": "palm"
+    },
+    "label": "mf→dorsal, lf→proximal, th→palm",
+    "idle": 0
+   },
+   {
+    "id": 11,
+    "psi": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "contacts": {
+     "ff": "thumb_side",
+     "mf": null,
+     "rf": null,
+     "lf": null,
+     "th": "palm"
+    },
+    "label": "ff→thumb_side, th→palm",
+    "idle": 1
+   },
+   {
+    "id": 12,
+    "psi": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "contacts": {
+     "ff": "little_side",
+     "mf": null,
+     "rf": null,
+     "lf": null,
+     "th": "palm"
+    },
+    "label": "ff→little_side, th→palm",
+    "idle": 1
+   },
+   {
+    "id": 13,
+    "psi": [
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "contacts": {
+     "ff": "thumb_side",
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": null
+    },
+    "label": "ff→thumb_side, lf→proximal",
+    "idle": 1
+   },
+   {
+    "id": 14,
+    "psi": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": "thumb_side",
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": "distal"
+    },
+    "label": "ff→thumb_side, lf→proximal, th→distal",
+    "idle": 0
+   },
+   {
+    "id": 15,
+    "psi": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": "little_side",
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": "distal"
+    },
+    "label": "ff→little_side, lf→proximal, th→distal",
+    "idle": 0
+   },
+   {
+    "id": 16,
+    "psi": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     1
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": "little_side",
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": "palm"
+    },
+    "label": "ff→little_side, lf→proximal, th→palm",
+    "idle": 0
+   },
+   {
+    "id": 17,
+    "psi": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "contacts": {
+     "ff": "thumb_side",
+     "mf": null,
+     "rf": "dorsal",
+     "lf": null,
+     "th": "palm"
+    },
+    "label": "ff→thumb_side, rf→dorsal, th→palm",
+    "idle": 0
+   },
+   {
+    "id": 18,
+    "psi": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "contacts": {
+     "ff": "little_side",
+     "mf": null,
+     "rf": "dorsal",
+     "lf": null,
+     "th": "palm"
+    },
+    "label": "ff→little_side, rf→dorsal, th→palm",
+    "idle": 0
+   },
+   {
+    "id": 19,
+    "psi": [
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": "thumb_side",
+     "mf": null,
+     "rf": "dorsal",
+     "lf": "proximal",
+     "th": null
+    },
+    "label": "ff→thumb_side, rf→dorsal, lf→proximal",
+    "idle": 0
+   },
+   {
+    "id": 20,
+    "psi": [
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": "little_side",
+     "mf": null,
+     "rf": "dorsal",
+     "lf": "proximal",
+     "th": null
+    },
+    "label": "ff→little_side, rf→dorsal, lf→proximal",
+    "idle": 0
+   },
+   {
+    "id": 21,
+    "psi": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "contacts": {
+     "ff": "little_side",
+     "mf": "dorsal",
+     "rf": null,
+     "lf": null,
+     "th": "palm"
+    },
+    "label": "ff→little_side, mf→dorsal, th→palm",
+    "idle": 0
+   },
+   {
+    "id": 22,
+    "psi": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": "thumb_side",
+     "mf": "dorsal",
+     "rf": null,
+     "lf": "proximal",
+     "th": null
+    },
+    "label": "ff→thumb_side, mf→dorsal, lf→proximal",
+    "idle": 0
+   },
+   {
+    "id": 23,
+    "psi": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "in_validated_graph": true,
+    "z": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "contacts": {
+     "ff": "little_side",
+     "mf": "dorsal",
+     "rf": null,
+     "lf": "proximal",
+     "th": null
+    },
+    "label": "ff→little_side, mf→dorsal, lf→proximal",
+    "idle": 0
+   }
+  ],
+  "edges": [
+   {
+    "source": 1,
+    "target": 0,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 1,
+    "self_loop": true,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 3,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 5,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 6,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 9,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 10,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 11,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 12,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 13,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 15,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 17,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 1,
+    "target": 20,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 2,
+    "target": 1,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 2,
+    "target": 6,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 2,
+    "target": 9,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 2,
+    "target": 10,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 3,
+    "target": 0,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 3,
+    "target": 1,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 3,
+    "target": 3,
+    "self_loop": true,
+    "origin": "validated"
+   },
+   {
+    "source": 3,
+    "target": 7,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 3,
+    "target": 11,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 3,
+    "target": 20,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 3,
+    "target": 23,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 7,
+    "target": 4,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 7,
+    "target": 7,
+    "self_loop": true,
+    "origin": "validated"
+   },
+   {
+    "source": 7,
+    "target": 12,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 7,
+    "target": 15,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 7,
+    "target": 16,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 7,
+    "target": 18,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 7,
+    "target": 20,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 7,
+    "target": 21,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 7,
+    "target": 23,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 11,
+    "target": 1,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 11,
+    "target": 3,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 11,
+    "target": 4,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 11,
+    "target": 5,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 11,
+    "target": 11,
+    "self_loop": true,
+    "origin": "validated"
+   },
+   {
+    "source": 11,
+    "target": 13,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 12,
+    "target": 2,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 12,
+    "target": 4,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 12,
+    "target": 6,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 12,
+    "target": 10,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 12,
+    "target": 11,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 12,
+    "target": 12,
+    "self_loop": true,
+    "origin": "validated"
+   },
+   {
+    "source": 12,
+    "target": 15,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 13,
+    "target": 5,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 13,
+    "target": 8,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 13,
+    "target": 9,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 13,
+    "target": 13,
+    "self_loop": true,
+    "origin": "validated"
+   },
+   {
+    "source": 13,
+    "target": 14,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 13,
+    "target": 19,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 14,
+    "target": 2,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 14,
+    "target": 9,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 14,
+    "target": 14,
+    "self_loop": true,
+    "origin": "validated"
+   },
+   {
+    "source": 15,
+    "target": 15,
+    "self_loop": true,
+    "origin": "validated"
+   },
+   {
+    "source": 15,
+    "target": 16,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 16,
+    "target": 1,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 16,
+    "target": 2,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 16,
+    "target": 10,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 18,
+    "target": 4,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 18,
+    "target": 12,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 19,
+    "target": 8,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 19,
+    "target": 22,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 22,
+    "target": 10,
+    "self_loop": false,
+    "origin": "validated"
+   },
+   {
+    "source": 22,
+    "target": 14,
+    "self_loop": false,
+    "origin": "validated"
+   }
+  ],
+  "n_nodes": 24,
+  "n_edges": 66,
+  "n_nodes_validated": 24,
+  "n_edges_validated": 66,
+  "source": "assets/symbol_graph_validated.json (validated) extended at run time by SymbolGraph.extended with executed nodes/transitions of successful demonstrations (origin=demo_extension)",
+  "visited_nodes": [
+   12,
+   12,
+   12,
+   2,
+   1,
+   1,
+   1,
+   13,
+   13,
+   13,
+   14
+  ],
+  "visited_edges": [
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    13
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    12,
+    2
+   ],
+   [
+    12,
+    12
+   ],
+   [
+    13,
+    13
+   ],
+   [
+    13,
+    14
+   ]
+  ],
+  "planned_words": [
+   [
+    12,
+    10
+   ],
+   [
+    12,
+    6
+   ],
+   [
+    12,
+    6
+   ],
+   [
+    2,
+    6
+   ],
+   [
+    1,
+    6
+   ],
+   [
+    1,
+    17
+   ],
+   [
+    1,
+    17
+   ],
+   [
+    13,
+    9
+   ],
+   [
+    13,
+    8
+   ],
+   [
+    13,
+    9
+   ]
+  ],
+  "plan_note": "plan_word = [current observed node, planned node for the next control interval] (H=2, receding horizon). Only the first action is executed; the next observed node comes from the physics (FlowMapper) and often differs from the planned one, after which the word is re-planned from the observed node."
+ },
+ "timing_source": "rat_ms / search_ms / ... per step come from the first camera-free timing run out/t3_block_s1_ours_r1.json (state trajectory bit-identical to the rendered run: True). Its rat_ms at step 0 includes the one-time LP model build (one_time_setup_ms). ours_ms_median / e2e_ms_median are per-step medians over 5 fresh-process runs with setup excluded (block_s1_timing.json).",
+ "per_step_timing_summary": {
+  "rat_ms": {
+   "n": 10,
+   "mean": 100.5163,
+   "median": 12.6425,
+   "min": 7.127,
+   "max": 891.366,
+   "p90": 106.2222,
+   "total": 1005.163
+  },
+  "lp_calls": {
+   "n": 10,
+   "mean": 1.9,
+   "median": 2.0,
+   "min": 1.0,
+   "max": 3.0,
+   "p90": 3.0,
+   "total": 19.0
+  }
+ },
+ "steps": [
+  {
+   "t": 0,
+   "frame": 30,
+   "video_time_s": 1.0,
+   "sim_time_s": 0.0,
+   "observed_node": 12,
+   "psi": [
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1
+   ],
+   "z": [
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1
+   ],
+   "contacts": {
+    "ff": "little_side",
+    "mf": null,
+    "rf": null,
+    "lf": null,
+    "th": "palm"
+   },
+   "contacts_text": "ff→little_side, th→palm",
+   "idle": 1,
+   "error_metric": 2.149192,
+   "rotation_error_rad": 2.149192,
+   "rotation_error_deg": 123.14,
+   "success_metric_ok": false,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "little_side",
+     "gap_m": 0.0154,
+     "force_proxy": 0.0
+    },
+    "mf": {
+     "face": "little_side",
+     "gap_m": 0.011,
+     "force_proxy": 0.0
+    },
+    "rf": {
+     "face": "proximal",
+     "gap_m": 0.0157,
+     "force_proxy": 0.0
+    },
+    "lf": {
+     "face": "proximal",
+     "gap_m": 0.0177,
+     "force_proxy": 0.0
+    },
+    "th": {
+     "face": "thumb_side",
+     "gap_m": 0.0142,
+     "force_proxy": 0.0
+    }
+   },
+   "decision": true,
+   "plan_word": [
+    12,
+    10
+   ],
+   "plan_z": [
+    [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ]
+   ],
+   "plan_contacts": [
+    {
+     "ff": "little_side",
+     "mf": null,
+     "rf": null,
+     "lf": null,
+     "th": "palm"
+    },
+    {
+     "ff": null,
+     "mf": "dorsal",
+     "rf": null,
+     "lf": "proximal",
+     "th": "palm"
+    }
+   ],
+   "next_planned_node": 10,
+   "next_planned_matches_observed": false,
+   "search_note": "boundary:held1:candidates2",
+   "held": 1,
+   "n_candidate_words": 2,
+   "lp_calls": 2,
+   "rat_ms": 891.366,
+   "search_ms": 1.926,
+   "conditioned_ms": 889.44,
+   "problem_build_ms": 862.317,
+   "lp_solver_ms": 10.379,
+   "objective": 139.898429,
+   "ours_ms_median": 28.785,
+   "e2e_ms_median": 33.282,
+   "ours_cum_ms_median": 0.0,
+   "e2e_cum_ms_median": 0.0,
+   "one_time_setup_ms": 860.005
+  },
+  {
+   "t": 1,
+   "frame": 50,
+   "video_time_s": 1.6667,
+   "sim_time_s": 0.01667,
+   "observed_node": 12,
+   "psi": [
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1
+   ],
+   "z": [
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1
+   ],
+   "contacts": {
+    "ff": "little_side",
+    "mf": null,
+    "rf": null,
+    "lf": null,
+    "th": "palm"
+   },
+   "contacts_text": "ff→little_side, th→palm",
+   "idle": 1,
+   "error_metric": 1.843593,
+   "rotation_error_rad": 1.843593,
+   "rotation_error_deg": 105.63,
+   "success_metric_ok": false,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "little_side",
+     "gap_m": 0.0183,
+     "force_proxy": 2.6473
+    },
+    "mf": {
+     "face": "little_side",
+     "gap_m": 0.0305,
+     "force_proxy": 0.8281
+    },
+    "rf": {
+     "face": "little_side",
+     "gap_m": 0.0203,
+     "force_proxy": 0.2362
+    },
+    "lf": {
+     "face": "proximal",
+     "gap_m": 0.0272,
+     "force_proxy": 0.0497
+    },
+    "th": {
+     "face": "palm",
+     "gap_m": 0.0041,
+     "force_proxy": 0.0458
+    }
+   },
+   "decision": true,
+   "plan_word": [
+    12,
+    6
+   ],
+   "plan_z": [
+    [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ]
+   ],
+   "plan_contacts": [
+    {
+     "ff": "little_side",
+     "mf": null,
+     "rf": null,
+     "lf": null,
+     "th": "palm"
+    },
+    {
+     "ff": null,
+     "mf": null,
+     "rf": "dorsal",
+     "lf": "proximal",
+     "th": "palm"
+    }
+   ],
+   "next_planned_node": 6,
+   "next_planned_matches_observed": false,
+   "search_note": "boundary:held2:candidates2",
+   "held": 2,
+   "n_candidate_words": 2,
+   "lp_calls": 2,
+   "rat_ms": 8.505,
+   "search_ms": 1.29,
+   "conditioned_ms": 7.215,
+   "problem_build_ms": 1.444,
+   "lp_solver_ms": 4.061,
+   "objective": 113.963385,
+   "ours_ms_median": 13.044,
+   "e2e_ms_median": 57.327,
+   "ours_cum_ms_median": 28.785,
+   "e2e_cum_ms_median": 33.282
+  },
+  {
+   "t": 2,
+   "frame": 70,
+   "video_time_s": 2.3333,
+   "sim_time_s": 0.03333,
+   "observed_node": 12,
+   "psi": [
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1
+   ],
+   "z": [
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1
+   ],
+   "contacts": {
+    "ff": "little_side",
+    "mf": null,
+    "rf": null,
+    "lf": null,
+    "th": "palm"
+   },
+   "contacts_text": "ff→little_side, th→palm",
+   "idle": 1,
+   "error_metric": 1.53371,
+   "rotation_error_rad": 1.53371,
+   "rotation_error_deg": 87.875,
+   "success_metric_ok": false,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "little_side",
+     "gap_m": 0.0214,
+     "force_proxy": 0.4095
+    },
+    "mf": {
+     "face": "little_side",
+     "gap_m": 0.0473,
+     "force_proxy": 0.3496
+    },
+    "rf": {
+     "face": "little_side",
+     "gap_m": 0.0436,
+     "force_proxy": 0.4497
+    },
+    "lf": {
+     "face": "proximal",
+     "gap_m": 0.0216,
+     "force_proxy": 0.178
+    },
+    "th": {
+     "face": "distal",
+     "gap_m": 0.0008,
+     "force_proxy": 2.0278
+    }
+   },
+   "decision": true,
+   "plan_word": [
+    12,
+    6
+   ],
+   "plan_z": [
+    [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ]
+   ],
+   "plan_contacts": [
+    {
+     "ff": "little_side",
+     "mf": null,
+     "rf": null,
+     "lf": null,
+     "th": "palm"
+    },
+    {
+     "ff": null,
+     "mf": null,
+     "rf": "dorsal",
+     "lf": "proximal",
+     "th": "palm"
+    }
+   ],
+   "next_planned_node": 6,
+   "next_planned_matches_observed": false,
+   "search_note": "boundary:held3:candidates1",
+   "held": 3,
+   "n_candidate_words": 1,
+   "lp_calls": 1,
+   "rat_ms": 12.721,
+   "search_ms": 0.775,
+   "conditioned_ms": 11.946,
+   "problem_build_ms": 1.482,
+   "lp_solver_ms": 4.125,
+   "objective": 83.418033,
+   "ours_ms_median": 11.165,
+   "e2e_ms_median": 51.113,
+   "ours_cum_ms_median": 41.829,
+   "e2e_cum_ms_median": 90.609
+  },
+  {
+   "t": 3,
+   "frame": 90,
+   "video_time_s": 3.0,
+   "sim_time_s": 0.05,
+   "observed_node": 2,
+   "psi": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ],
+   "z": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1
+   ],
+   "contacts": {
+    "ff": null,
+    "mf": null,
+    "rf": null,
+    "lf": "proximal",
+    "th": "palm"
+   },
+   "contacts_text": "lf→proximal, th→palm",
+   "idle": 1,
+   "error_metric": 1.277864,
+   "rotation_error_rad": 1.277864,
+   "rotation_error_deg": 73.216,
+   "success_metric_ok": false,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "thumb_side",
+     "gap_m": 0.0194,
+     "force_proxy": 0.278
+    },
+    "mf": {
+     "face": "dorsal",
+     "gap_m": 0.0403,
+     "force_proxy": 0.1283
+    },
+    "rf": {
+     "face": "dorsal",
+     "gap_m": 0.0499,
+     "force_proxy": 0.0991
+    },
+    "lf": {
+     "face": "little_side",
+     "gap_m": 0.0098,
+     "force_proxy": 0.0314
+    },
+    "th": {
+     "face": "palm",
+     "gap_m": 0.0002,
+     "force_proxy": 0.8031
+    }
+   },
+   "decision": true,
+   "plan_word": [
+    2,
+    6
+   ],
+   "plan_z": [
+    [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ]
+   ],
+   "plan_contacts": [
+    {
+     "ff": null,
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": "palm"
+    },
+    {
+     "ff": null,
+     "mf": null,
+     "rf": "dorsal",
+     "lf": "proximal",
+     "th": "palm"
+    }
+   ],
+   "next_planned_node": 6,
+   "next_planned_matches_observed": false,
+   "search_note": "boundary:held1:candidates1",
+   "held": 1,
+   "n_candidate_words": 1,
+   "lp_calls": 1,
+   "rat_ms": 10.242,
+   "search_ms": 1.045,
+   "conditioned_ms": 9.197,
+   "problem_build_ms": 2.064,
+   "lp_solver_ms": 2.671,
+   "objective": 59.721565,
+   "ours_ms_median": 9.882,
+   "e2e_ms_median": 66.576,
+   "ours_cum_ms_median": 52.994,
+   "e2e_cum_ms_median": 141.722
+  },
+  {
+   "t": 4,
+   "frame": 110,
+   "video_time_s": 3.6667,
+   "sim_time_s": 0.06667,
+   "observed_node": 1,
+   "psi": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0
+   ],
+   "z": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1
+   ],
+   "contacts": {
+    "ff": null,
+    "mf": null,
+    "rf": null,
+    "lf": "proximal",
+    "th": "distal"
+   },
+   "contacts_text": "lf→proximal, th→distal",
+   "idle": 1,
+   "error_metric": 1.058345,
+   "rotation_error_rad": 1.058345,
+   "rotation_error_deg": 60.639,
+   "success_metric_ok": false,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "thumb_side",
+     "gap_m": 0.0241,
+     "force_proxy": 0.1281
+    },
+    "mf": {
+     "face": "dorsal",
+     "gap_m": 0.0274,
+     "force_proxy": 0.1583
+    },
+    "rf": {
+     "face": "dorsal",
+     "gap_m": 0.0435,
+     "force_proxy": 0.189
+    },
+    "lf": {
+     "face": "proximal",
+     "gap_m": 0.0075,
+     "force_proxy": 0.0905
+    },
+    "th": {
+     "face": "distal",
+     "gap_m": 0.0013,
+     "force_proxy": 0.8851
+    }
+   },
+   "decision": true,
+   "plan_word": [
+    1,
+    6
+   ],
+   "plan_z": [
+    [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ]
+   ],
+   "plan_contacts": [
+    {
+     "ff": null,
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": "distal"
+    },
+    {
+     "ff": null,
+     "mf": null,
+     "rf": "dorsal",
+     "lf": "proximal",
+     "th": "palm"
+    }
+   ],
+   "next_planned_node": 6,
+   "next_planned_matches_observed": false,
+   "search_note": "boundary:held1:candidates2",
+   "held": 1,
+   "n_candidate_words": 2,
+   "lp_calls": 2,
+   "rat_ms": 18.984,
+   "search_ms": 1.704,
+   "conditioned_ms": 17.28,
+   "problem_build_ms": 2.023,
+   "lp_solver_ms": 5.192,
+   "objective": 77.302935,
+   "ours_ms_median": 10.326,
+   "e2e_ms_median": 50.811,
+   "ours_cum_ms_median": 62.877,
+   "e2e_cum_ms_median": 208.297
+  },
+  {
+   "t": 5,
+   "frame": 130,
+   "video_time_s": 4.3333,
+   "sim_time_s": 0.08333,
+   "observed_node": 1,
+   "psi": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0
+   ],
+   "z": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1
+   ],
+   "contacts": {
+    "ff": null,
+    "mf": null,
+    "rf": null,
+    "lf": "proximal",
+    "th": "distal"
+   },
+   "contacts_text": "lf→proximal, th→distal",
+   "idle": 1,
+   "error_metric": 0.863023,
+   "rotation_error_rad": 0.863023,
+   "rotation_error_deg": 49.448,
+   "success_metric_ok": false,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "thumb_side",
+     "gap_m": 0.0275,
+     "force_proxy": 0.3854
+    },
+    "mf": {
+     "face": "dorsal",
+     "gap_m": 0.0193,
+     "force_proxy": 0.395
+    },
+    "rf": {
+     "face": "dorsal",
+     "gap_m": 0.0382,
+     "force_proxy": 0.3874
+    },
+    "lf": {
+     "face": "proximal",
+     "gap_m": 0.0086,
+     "force_proxy": 0.2133
+    },
+    "th": {
+     "face": "distal",
+     "gap_m": 0.0108,
+     "force_proxy": 0.4984
+    }
+   },
+   "decision": true,
+   "plan_word": [
+    1,
+    17
+   ],
+   "plan_z": [
+    [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ]
+   ],
+   "plan_contacts": [
+    {
+     "ff": null,
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": "distal"
+    },
+    {
+     "ff": "thumb_side",
+     "mf": null,
+     "rf": "dorsal",
+     "lf": null,
+     "th": "palm"
+    }
+   ],
+   "next_planned_node": 17,
+   "next_planned_matches_observed": false,
+   "search_note": "boundary:held2:candidates2",
+   "held": 2,
+   "n_candidate_words": 2,
+   "lp_calls": 2,
+   "rat_ms": 12.564,
+   "search_ms": 1.682,
+   "conditioned_ms": 10.882,
+   "problem_build_ms": 1.947,
+   "lp_solver_ms": 5.397,
+   "objective": 39.505386,
+   "ours_ms_median": 12.564,
+   "e2e_ms_median": 48.552,
+   "ours_cum_ms_median": 73.202,
+   "e2e_cum_ms_median": 259.109
+  },
+  {
+   "t": 6,
+   "frame": 150,
+   "video_time_s": 5.0,
+   "sim_time_s": 0.1,
+   "observed_node": 1,
+   "psi": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0
+   ],
+   "z": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1
+   ],
+   "contacts": {
+    "ff": null,
+    "mf": null,
+    "rf": null,
+    "lf": "proximal",
+    "th": "distal"
+   },
+   "contacts_text": "lf→proximal, th→distal",
+   "idle": 1,
+   "error_metric": 0.710385,
+   "rotation_error_rad": 0.710385,
+   "rotation_error_deg": 40.702,
+   "success_metric_ok": false,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "thumb_side",
+     "gap_m": 0.0287,
+     "force_proxy": 0.1546
+    },
+    "mf": {
+     "face": "dorsal",
+     "gap_m": 0.0176,
+     "force_proxy": 0.2646
+    },
+    "rf": {
+     "face": "dorsal",
+     "gap_m": 0.0311,
+     "force_proxy": 0.5908
+    },
+    "lf": {
+     "face": "proximal",
+     "gap_m": 0.009,
+     "force_proxy": 0.6305
+    },
+    "th": {
+     "face": "distal",
+     "gap_m": 0.0226,
+     "force_proxy": 0.1602
+    }
+   },
+   "decision": true,
+   "plan_word": [
+    1,
+    17
+   ],
+   "plan_z": [
+    [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ]
+   ],
+   "plan_contacts": [
+    {
+     "ff": null,
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": "distal"
+    },
+    {
+     "ff": "thumb_side",
+     "mf": null,
+     "rf": "dorsal",
+     "lf": null,
+     "th": "palm"
+    }
+   ],
+   "next_planned_node": 17,
+   "next_planned_matches_observed": false,
+   "search_note": "boundary:held3:candidates1",
+   "held": 3,
+   "n_candidate_words": 1,
+   "lp_calls": 1,
+   "rat_ms": 7.127,
+   "search_ms": 1.001,
+   "conditioned_ms": 6.127,
+   "problem_build_ms": 1.891,
+   "lp_solver_ms": 2.676,
+   "objective": 53.602264,
+   "ours_ms_median": 7.127,
+   "e2e_ms_median": 24.746,
+   "ours_cum_ms_median": 85.766,
+   "e2e_cum_ms_median": 307.661
+  },
+  {
+   "t": 7,
+   "frame": 170,
+   "video_time_s": 5.6667,
+   "sim_time_s": 0.11667,
+   "observed_node": 13,
+   "psi": [
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "z": [
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1
+   ],
+   "contacts": {
+    "ff": "thumb_side",
+    "mf": null,
+    "rf": null,
+    "lf": "proximal",
+    "th": null
+   },
+   "contacts_text": "ff→thumb_side, lf→proximal",
+   "idle": 1,
+   "error_metric": 0.591786,
+   "rotation_error_rad": 0.591786,
+   "rotation_error_deg": 33.907,
+   "success_metric_ok": false,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "thumb_side",
+     "gap_m": 0.0151,
+     "force_proxy": 0.4672
+    },
+    "mf": {
+     "face": "dorsal",
+     "gap_m": 0.0169,
+     "force_proxy": 0.2727
+    },
+    "rf": {
+     "face": "dorsal",
+     "gap_m": 0.0211,
+     "force_proxy": 0.5149
+    },
+    "lf": {
+     "face": "proximal",
+     "gap_m": 0.0088,
+     "force_proxy": 0.1345
+    },
+    "th": {
+     "face": "distal",
+     "gap_m": 0.0316,
+     "force_proxy": 0.2434
+    }
+   },
+   "decision": true,
+   "plan_word": [
+    13,
+    9
+   ],
+   "plan_z": [
+    [
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    [
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0
+    ]
+   ],
+   "plan_contacts": [
+    {
+     "ff": "thumb_side",
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": null
+    },
+    {
+     "ff": null,
+     "mf": "dorsal",
+     "rf": null,
+     "lf": "proximal",
+     "th": "distal"
+    }
+   ],
+   "next_planned_node": 9,
+   "next_planned_matches_observed": false,
+   "search_note": "boundary:held1:candidates2",
+   "held": 1,
+   "n_candidate_words": 2,
+   "lp_calls": 2,
+   "rat_ms": 12.189,
+   "search_ms": 1.636,
+   "conditioned_ms": 10.554,
+   "problem_build_ms": 1.863,
+   "lp_solver_ms": 5.714,
+   "objective": 39.889193,
+   "ours_ms_median": 15.179,
+   "e2e_ms_median": 39.62,
+   "ours_cum_ms_median": 92.894,
+   "e2e_cum_ms_median": 332.407
+  },
+  {
+   "t": 8,
+   "frame": 190,
+   "video_time_s": 6.3333,
+   "sim_time_s": 0.13333,
+   "observed_node": 13,
+   "psi": [
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "z": [
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1
+   ],
+   "contacts": {
+    "ff": "thumb_side",
+    "mf": null,
+    "rf": null,
+    "lf": "proximal",
+    "th": null
+   },
+   "contacts_text": "ff→thumb_side, lf→proximal",
+   "idle": 1,
+   "error_metric": 0.435822,
+   "rotation_error_rad": 0.435822,
+   "rotation_error_deg": 24.971,
+   "success_metric_ok": false,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "thumb_side",
+     "gap_m": 0.0116,
+     "force_proxy": 3.5198
+    },
+    "mf": {
+     "face": "dorsal",
+     "gap_m": 0.0108,
+     "force_proxy": 0.4218
+    },
+    "rf": {
+     "face": "dorsal",
+     "gap_m": 0.0134,
+     "force_proxy": 0.2079
+    },
+    "lf": {
+     "face": "proximal",
+     "gap_m": 0.0099,
+     "force_proxy": 0.2022
+    },
+    "th": {
+     "face": "distal",
+     "gap_m": 0.0315,
+     "force_proxy": 0.2903
+    }
+   },
+   "decision": true,
+   "plan_word": [
+    13,
+    8
+   ],
+   "plan_z": [
+    [
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    [
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ]
+   ],
+   "plan_contacts": [
+    {
+     "ff": "thumb_side",
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": null
+    },
+    {
+     "ff": null,
+     "mf": "dorsal",
+     "rf": null,
+     "lf": "proximal",
+     "th": "thumb_side"
+    }
+   ],
+   "next_planned_node": 8,
+   "next_planned_matches_observed": false,
+   "search_note": "boundary:held2:candidates3",
+   "held": 2,
+   "n_candidate_words": 3,
+   "lp_calls": 3,
+   "rat_ms": 15.085,
+   "search_ms": 2.296,
+   "conditioned_ms": 12.789,
+   "problem_build_ms": 1.831,
+   "lp_solver_ms": 6.199,
+   "objective": 20.19112,
+   "ours_ms_median": 19.539,
+   "e2e_ms_median": 61.836,
+   "ours_cum_ms_median": 108.073,
+   "e2e_cum_ms_median": 372.027
+  },
+  {
+   "t": 9,
+   "frame": 210,
+   "video_time_s": 7.0,
+   "sim_time_s": 0.15,
+   "observed_node": 13,
+   "psi": [
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "z": [
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1
+   ],
+   "contacts": {
+    "ff": "thumb_side",
+    "mf": null,
+    "rf": null,
+    "lf": "proximal",
+    "th": null
+   },
+   "contacts_text": "ff→thumb_side, lf→proximal",
+   "idle": 1,
+   "error_metric": 0.198007,
+   "rotation_error_rad": 0.198007,
+   "rotation_error_deg": 11.345,
+   "success_metric_ok": false,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "thumb_side",
+     "gap_m": 0.0079,
+     "force_proxy": 8.7487
+    },
+    "mf": {
+     "face": "dorsal",
+     "gap_m": 0.0083,
+     "force_proxy": 0.2207
+    },
+    "rf": {
+     "face": "dorsal",
+     "gap_m": 0.0172,
+     "force_proxy": 0.2016
+    },
+    "lf": {
+     "face": "proximal",
+     "gap_m": 0.0045,
+     "force_proxy": 0.0491
+    },
+    "th": {
+     "face": "distal",
+     "gap_m": 0.0142,
+     "force_proxy": 0.1684
+    }
+   },
+   "decision": true,
+   "plan_word": [
+    13,
+    9
+   ],
+   "plan_z": [
+    [
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    [
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0
+    ]
+   ],
+   "plan_contacts": [
+    {
+     "ff": "thumb_side",
+     "mf": null,
+     "rf": null,
+     "lf": "proximal",
+     "th": null
+    },
+    {
+     "ff": null,
+     "mf": "dorsal",
+     "rf": null,
+     "lf": "proximal",
+     "th": "distal"
+    }
+   ],
+   "next_planned_node": 9,
+   "next_planned_matches_observed": false,
+   "search_note": "boundary:held3:candidates3",
+   "held": 3,
+   "n_candidate_words": 3,
+   "lp_calls": 3,
+   "rat_ms": 16.38,
+   "search_ms": 2.203,
+   "conditioned_ms": 14.177,
+   "problem_build_ms": 1.842,
+   "lp_solver_ms": 8.6,
+   "objective": 18.993239,
+   "ours_ms_median": 18.411,
+   "e2e_ms_median": 57.663,
+   "ours_cum_ms_median": 127.612,
+   "e2e_cum_ms_median": 433.863
+  },
+  {
+   "t": 10,
+   "frame": 230,
+   "video_time_s": 7.6667,
+   "sim_time_s": 0.16667,
+   "observed_node": 14,
+   "psi": [
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0
+   ],
+   "z": [
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   "contacts": {
+    "ff": "thumb_side",
+    "mf": null,
+    "rf": null,
+    "lf": "proximal",
+    "th": "distal"
+   },
+   "contacts_text": "ff→thumb_side, lf→proximal, th→distal",
+   "idle": 0,
+   "error_metric": 0.071334,
+   "rotation_error_rad": 0.071334,
+   "rotation_error_deg": 4.087,
+   "success_metric_ok": true,
+   "measured_nearest_face": {
+    "ff": {
+     "face": "thumb_side",
+     "gap_m": 0.017,
+     "force_proxy": 2.155
+    },
+    "mf": {
+     "face": "dorsal",
+     "gap_m": 0.0135,
+     "force_proxy": 0.2617
+    },
+    "rf": {
+     "face": "dorsal",
+     "gap_m": 0.0199,
+     "force_proxy": 0.2171
+    },
+    "lf": {
+     "face": "dorsal",
+     "gap_m": 0.0058,
+     "force_proxy": 0.2545
+    },
+    "th": {
+     "face": "distal",
+     "gap_m": 0.0102,
+     "force_proxy": 4.2423
+    }
+   },
+   "decision": false,
+   "search_note": "terminal state: success test passed, no decision taken",
+   "ours_cum_ms_median": 146.022,
+   "e2e_cum_ms_median": 491.526
+  }
+ ],
+ "measured_nearest_face_note": "Supplementary geometry: distance from each distal-link origin (not the fingertip surface) to the nearest object face, and the norm of the link's incoming joint force. The symbolic contacts above are the task's FlowMapper projection of this geometry onto a feasible contact flow.",
+ "files": {
+  "mp4": "block_s1.mp4",
+  "webm": "block_s1.webm",
+  "poster": "block_s1_poster.jpg",
+  "timing": "block_s1_timing.json"
+ },
+ "timing_sync": {
+  "ours_setup_ms_median": 834.411,
+  "e2e_setup_ms_median": 76.542,
+  "n_steps_ours": 10,
+  "n_steps_e2e": 10,
+  "note": "Counter sync: at video frame steps[t].frame the controllers have taken decisions 0..t-1, so the cumulative decision time (setup excluded) is steps[t].ours_cum_ms_median / e2e_cum_ms_median; the decision taken at step t costs steps[t].ours_ms_median / e2e_ms_median and plays out between frame(t) and frame(t+1). The video shows OUR trajectory; E2E's numbers are from its own closed loop on the same instance (same number of steps)."
+ }
+}

@@ -1,0 +1,55 @@
+{
+  "_note": "Numbers as reported in the paper draft (Tables 1-5, Fig. 7). Real-world columns use the corrected task names: Sorting = red/blue blocks into colour bins (two orders); Matching = shaped blocks into the shape box (one order).",
+  "table1": {
+    "tasks": ["MPushT", "Hook", "Packing", "Block", "Cuboid", "Pen"],
+    "group": ["2D manipulation", "2D manipulation", "2D manipulation", "In-hand reorientation", "In-hand reorientation", "In-hand reorientation"],
+    "methods": [
+      {"name": "CoCo", "family": "solver", "sr": [0.75, 0.63, 0.75, 0.69, 0.81, 0.75], "is": [3.57, 3.18, 1.39, 2.70, 1.61, 1.28]},
+      {"name": "GBD-MPC", "family": "solver", "sr": [0.94, 0.94, 0.81, 0.94, 0.88, 0.88], "is": [0.12, 0.06, 0.09, 0.32, 0.21, 0.06]},
+      {"name": "PDDLStream", "family": "symbol", "sr": [0.88, 0.81, 0.69, 0.81, 0.81, 0.75], "is": [0.77, 0.36, 0.42, 0.67, 0.38, 0.17]},
+      {"name": "PGS", "family": "symbol", "sr": [0.81, 0.69, 0.75, 0.75, 0.69, 0.81], "is": [0.08, 0.37, 0.16, 0.15, 0.13, 0.04]},
+      {"name": "IVNTR", "family": "symbol", "sr": [0.88, 0.81, 0.75, 0.94, 0.75, 0.81], "is": [0.15, 0.22, 0.12, 0.10, 0.10, 0.03]},
+      {"name": "pix2pred", "family": "symbol", "sr": [0.88, 0.88, 0.94, 0.94, 0.88, 0.75], "is": [0.03, 0.09, 0.08, 0.05, 0.04, 0.01]},
+      {"name": "Ours", "family": "ours", "sr": [1.00, 1.00, 0.94, 0.88, 0.94, 0.88], "is": [4.81, 3.07, 2.77, 1.53, 1.34, 1.94]}
+    ]
+  },
+  "table2": {
+    "tasks": ["Avoiding", "Pushing", "Aligning", "Sorting", "Matching"],
+    "real": [false, false, false, true, true],
+    "delta": 0.001,
+    "methods": [
+      {"name": "DDPM", "sr": [1.00, 0.90, 0.94, 0.75, 0.88], "dc": [7.03, 1.00, 10.31, 5.15, 1.68]},
+      {"name": "ACT", "sr": [0.91, 0.91, 0.91, 0.69, 0.63], "dc": [833.69, 5.93, 9.25, 173.45, 259.67]},
+      {"name": "BESO", "sr": [0.97, 0.63, 0.75, 0.75, 0.69], "dc": [329.03, 198.57, 338.03, 87.48, 147.85]},
+      {"name": "IBC", "sr": [0.81, 0.63, 0.63, 0.63, 0.69], "dc": [690.34, 312.70, 349.94, 340.78, 562.95]},
+      {"name": "BeT", "sr": [0.72, 0.30, 0.53, 0.56, 0.75], "dc": [495.50, 105.63, 94.66, 936.83, 1325.94]},
+      {"name": "DDPM + symbols", "ours": true, "sr": [1.00, 0.91, 0.84, 0.75, 0.88], "dc": [2.00, 1.00, 2.41, 1.20, 1.00]}
+    ]
+  },
+  "semantics": [
+    {"task": "MPushT", "ours": [["Σ<sub>τ<sub>c</sub><0</sub> z<sub>c</sub> − Σ<sub>τ<sub>c</sub>>0</sub> z<sub>c</sub>", "is a clockwise push"], ["z<sub>top</sub> − z<sub>bottom</sub>", "is a push from above"]],
+     "pgs": [["ξ<sub>θ</sub> ≤ −0.9", "T orientation below a threshold"], ["ξ<sub>dist</sub> ≤ 1.0", "near the goal"]],
+     "pix2pred": [["stem pointing down right", ""], ["rotation error small", ""]]},
+    {"task": "Block", "ours": [["z<sub>s→ff</sub>", "index finger contacts the object"], ["z<sub>th→palm</sub>", "thumb contacts the palm face"]],
+     "pgs": [["ξ<sub>ff→thu</sub> > 0.5", "index finger near the thumb"], ["ξ<sub>11</sub> ≤ 0.6", "a control variable below a threshold"]],
+     "pix2pred": [["orientation over bound", ""], ["orientation southeast", ""]]}
+  ],
+  "table4": [
+    {"task": "Avoiding", "pref": "pass on the left", "sym": "ψ = 0", "sr": 1.00, "pr": 0.94},
+    {"task": "Avoiding", "pref": "pass on the right", "sym": "ψ = 1", "sr": 1.00, "pr": 1.00},
+    {"task": "Aligning", "pref": "push from outside", "sym": "ψ (i)", "sr": 0.75, "pr": 0.75},
+    {"task": "Aligning", "pref": "push from inside", "sym": "ψ (ii)", "sr": 0.83, "pr": 0.81}
+  ],
+  "table5": {
+    "H": [4, 8, 12, 16],
+    "rows": [
+      {"task": "Avoiding", "k": [0, 1, 1, 2], "sr": [1.00, 1.00, 0.91, 0.94]},
+      {"task": "Aligning", "k": [4, 5, 6, 8], "sr": [0.84, 0.75, 0.69, 0.63]}
+    ]
+  },
+  "fig7": {
+    "bins": ["[0, 0.5)", "[0.5, 1)", "1.0"],
+    "tn": [1.1, 4.1, 7.2],
+    "share": [0.12, 0.42, 0.46]
+  }
+}

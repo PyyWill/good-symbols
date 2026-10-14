@@ -1,0 +1,1290 @@
+{
+ "task": "block",
+ "setting": 3,
+ "instance": "Block setting 3: the single fixed reset of assets/setting_3.npz (deterministic IsaacLab reset; the seed is ignored). Same instance as the video block_s3.mp4.",
+ "success": {
+  "ours": true,
+  "e2e": true,
+  "ours_runs": [
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "e2e_runs": [
+   true,
+   true,
+   true,
+   true,
+   true
+  ]
+ },
+ "n_steps": {
+  "ours": 13,
+  "e2e": 13,
+  "note": "control steps to success (each 1/60 s of simulated time); identical in all 5 runs"
+ },
+ "final_rotation_error_deg": {
+  "ours": 5.328,
+  "e2e": 5.328
+ },
+ "final_rotation_error_rad": {
+  "ours": 0.093,
+  "e2e": 0.093
+ },
+ "success_criterion": "||rotvec(R^T R_goal)|| <= 0.10 rad (5.73 deg)",
+ "trajectories_identical_across_runs": {
+  "ours": true,
+  "e2e": true
+ },
+ "ours_vs_e2e": {
+  "same_contact_mode_sequence": true,
+  "max_abs_state_difference": 0.0,
+  "note": "ours (built from E2E-teacher demonstrations) executes the same observed contact-mode sequence as E2E on this instance, with nearly identical states, so both decision-time series are taken along (almost) the same trajectory"
+ },
+ "per_step_ms_median_over_runs": {
+  "ours": [
+   16.02,
+   6.957,
+   9.414,
+   7.841,
+   8.082,
+   21.484,
+   28.175,
+   40.149,
+   27.319,
+   27.806,
+   18.481,
+   14.936,
+   18.554
+  ],
+  "e2e": [
+   19.07,
+   32.055,
+   25.586,
+   35.098,
+   38.396,
+   23.864,
+   28.161,
+   45.034,
+   26.014,
+   31.74,
+   41.943,
+   35.696,
+   38.506
+  ],
+  "runs_per_step": {
+   "ours": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "e2e": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+   ]
+  },
+  "note": "entry t = median over the 5 runs of the decision time at control step t (ms). The one-time setup is NOT included (ours: the persistent LP model build is subtracted from step 0; E2E: the CPLEX model is built before the episode). ours and e2e follow their own closed-loop trajectories on the same instance."
+ },
+ "setup_ms": {
+  "ours": 832.789,
+  "e2e": 76.744,
+  "ours_what": "one-time construction of the persistent reduced HiGHS LP model (scripts_fast.utils._LPModel: QR-based equality elimination + HiGHS passModel), triggered inside step 0's PrefixLP; timed by an in-memory wrapper around _LPModel.__init__",
+  "e2e_what": "one-time construction of the CPLEX MILP model in the controller constructor (RotateBlockMPC._build_cplex: variables, row-by-row constraint load, parameters), before the episode; timed by an in-memory wrapper",
+  "shared_ms": 17.287,
+  "shared_what": "controller constructor minus _build_cplex (setting npz load, geometry fit, MILP matrix assembly RotateBlockMPC._build). Both methods need it (ours reads the assembled native constraint matrix through TaskAdapter.problem), so it is excluded from both setups.",
+  "ours_note": "the build is real compute, not library warm-up: rebuilding the same model repeatedly in a separate camera-free process (out/lpbuild_diag.json) took 376-789 ms",
+  "excluded": "Python library imports (import cplex measured separately, median 15 ms; highspy is imported with scripts_fast), Isaac launch, and ours' offline grammar build (from demonstrations) are excluded from both.",
+  "per_run": {
+   "ours": [
+    1177.854,
+    832.789,
+    747.544,
+    610.325,
+    946.611
+   ],
+   "e2e": [
+    78.997,
+    61.885,
+    61.005,
+    76.744,
+    91.128
+   ]
+  }
+ },
+ "totals_ms": {
+  "ours": 245.217,
+  "e2e": 421.163,
+  "ours_including_setup": 1078.006,
+  "e2e_including_setup": 497.907,
+  "note": "sum over control steps of per_step_ms_median_over_runs (excluding setup), and the same plus setup_ms",
+  "per_run_totals_excl_setup": {
+   "ours": [
+    292.111,
+    322.315,
+    204.589,
+    187.988,
+    265.995
+   ],
+   "e2e": [
+    422.663,
+    425.94,
+    419.661,
+    416.674,
+    433.847
+   ]
+  }
+ },
+ "median_per_step_ms": {
+  "ours": 18.481,
+  "e2e": 32.055,
+  "note": "median over control steps of per_step_ms_median_over_runs",
+  "pooled_all_runs_steps": {
+   "ours": 17.674,
+   "e2e": 32.105
+  }
+ },
+ "speedup_e2e_over_ours": {
+  "median_per_step": 1.734,
+  "total_excl_setup": 1.718,
+  "total_including_setup": 0.462,
+  "note": "> 1 means ours is faster"
+ },
+ "solver": {
+  "ours": "HiGHS (highspy) dual simplex LPs, 1 thread, persistent model with warm-started basis; 1-4 conditioned LPs per step; no MILP solver online",
+  "e2e": "IBM ILOG CPLEX 22.2 (python API) MILP, 1 thread, mip gap 1e-4, random seed 0 -- the Block controller's default (RotateBlockMPC, H = 2, 40 binaries)"
+ },
+ "budgets": {
+  "ours_time_limit_s": 5.0,
+  "e2e_time_limit_s": 0.1,
+  "e2e_time_limit_hits": 0,
+  "e2e_status_counts": {
+   "integer optimal solution": 40,
+   "integer optimal, tolerance": 25
+  },
+  "note": "ours: --time-limit 5 (scripts_fast recommendation for block). E2E: the controller's default CPLEX time limit 0.1 s per solve. E2E hit its time limit on 0 of 65 solves over the 5 runs (all solves optimal within the mip gap)."
+ },
+ "what_is_timed": {
+  "ours": "per control step: rat_t = search_t + conditioned_t from run_predicate_mpc (time.perf_counter): zero-LP plan-word search (grammar lookup + bound propagation) + building this state's native problem data (TaskAdapter.problem + PrefixLP incl. LP-signature hashing) + 1-4 conditioned LP solves + decode/certificate check; minus the one-time LP model build at step 0 (reported as setup_ms.ours). Excludes physics stepping and contact observation.",
+  "e2e": "per control step: wall clock (time.perf_counter) of TaskAdapter.teacher(state, goal) -> RotateBlockMPC.solve(): per-state RHS/objective update of the prebuilt CPLEX model + full MILP solve + solution extraction. The CPLEX model is built once before the episode (setup_ms.e2e). Excludes physics stepping and contact observation."
+ },
+ "machine": {
+  "host": "iclspiderman.ri.cmu.edu",
+  "cpu": "Intel(R) Xeon(R) Gold 6426Y",
+  "cores": 64,
+  "gpu": "NVIDIA RTX A6000 (GPU 2, physics only)",
+  "loadavg_1min_range": [
+   12.04,
+   21.97
+  ],
+  "note": "shared multi-user server; decision times are CPU wall clock; one Isaac process at a time; fresh process per run; runs interleaved ours/E2E (order alternated per repetition) across settings 1-3. Other users' training jobs were running during all runs (1-min load average 12-22 on 64 cores; GPU 2 also used by another user's job), so absolute times carry run-to-run noise; per-run numbers are in runs."
+ },
+ "runs": {
+  "ours": [
+   {
+    "file": "t3_block_s3_ours_r1.json",
+    "success": true,
+    "steps": 13,
+    "fail_reason": null,
+    "final_error_rad": 0.093,
+    "final_error_deg": 5.328,
+    "time_limit_s": 5.0,
+    "setup_ms": 1177.854,
+    "setup_at_control_step": 0,
+    "lp_model_builds": [
+     {
+      "ms": 1177.854,
+      "control_step": 0
+     }
+    ],
+    "later_rebuilds_ms_in_per_step": [],
+    "per_step_ms": [
+     14.616,
+     11.14,
+     11.873,
+     8.648,
+     9.119,
+     26.356,
+     30.136,
+     40.149,
+     28.445,
+     31.918,
+     32.249,
+     22.391,
+     25.071
+    ],
+    "per_step_raw_rat_ms": [
+     1192.47,
+     11.14,
+     11.873,
+     8.648,
+     9.119,
+     26.356,
+     30.136,
+     40.149,
+     28.445,
+     31.918,
+     32.249,
+     22.391,
+     25.071
+    ],
+    "search_ms": [
+     1.385,
+     0.683,
+     0.712,
+     0.891,
+     0.92,
+     2.138,
+     2.216,
+     2.805,
+     2.114,
+     2.452,
+     2.121,
+     1.589,
+     1.804
+    ],
+    "lp_solver_ms": [
+     7.104,
+     2.074,
+     2.108,
+     2.076,
+     1.685,
+     7.434,
+     12.366,
+     14.905,
+     10.832,
+     10.884,
+     10.794,
+     7.628,
+     8.061
+    ],
+    "problem_build_ms": [
+     1181.037,
+     1.457,
+     1.451,
+     1.976,
+     2.066,
+     1.993,
+     2.309,
+     2.039,
+     1.974,
+     2.162,
+     2.033,
+     1.427,
+     1.791
+    ],
+    "lp_calls": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     3,
+     3,
+     4,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "lp_pool": {
+     "builds": 1,
+     "shapes": [
+      [
+       846,
+       241
+      ]
+     ],
+     "runs": 30,
+     "warm_runs": 29,
+     "simplex_iterations": 1475
+    },
+    "total_ms_excl_setup": 292.111,
+    "median_ms": 25.071,
+    "shared_constructor_ms": 17.227,
+    "import_cplex_ms": 14.571,
+    "loadavg_start": [
+     17.42,
+     12.13,
+     8.72
+    ],
+    "loadavg_end": [
+     21.97,
+     13.24,
+     9.12
+    ]
+   },
+   {
+    "file": "t3_block_s3_ours_r2.json",
+    "success": true,
+    "steps": 13,
+    "fail_reason": null,
+    "final_error_rad": 0.093,
+    "final_error_deg": 5.328,
+    "time_limit_s": 5.0,
+    "setup_ms": 832.789,
+    "setup_at_control_step": 0,
+    "lp_model_builds": [
+     {
+      "ms": 832.789,
+      "control_step": 0
+     }
+    ],
+    "later_rebuilds_ms_in_per_step": [],
+    "per_step_ms": [
+     16.02,
+     6.148,
+     9.414,
+     10.298,
+     11.221,
+     32.556,
+     32.972,
+     56.577,
+     29.815,
+     27.806,
+     35.28,
+     25.077,
+     29.131
+    ],
+    "per_step_raw_rat_ms": [
+     848.809,
+     6.148,
+     9.414,
+     10.298,
+     11.221,
+     32.556,
+     32.972,
+     56.577,
+     29.815,
+     27.806,
+     35.28,
+     25.077,
+     29.131
+    ],
+    "search_ms": [
+     1.149,
+     0.718,
+     0.694,
+     0.906,
+     0.872,
+     2.107,
+     2.136,
+     2.77,
+     2.09,
+     2.1,
+     2.055,
+     1.552,
+     2.175
+    ],
+    "lp_solver_ms": [
+     6.706,
+     2.099,
+     2.084,
+     2.039,
+     1.531,
+     7.019,
+     11.741,
+     14.73,
+     10.819,
+     10.763,
+     11.214,
+     7.568,
+     9.313
+    ],
+    "problem_build_ms": [
+     835.312,
+     2.238,
+     1.484,
+     1.953,
+     1.958,
+     2.001,
+     2.018,
+     2.002,
+     1.939,
+     1.951,
+     1.911,
+     1.358,
+     1.953
+    ],
+    "lp_calls": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     3,
+     3,
+     4,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "lp_pool": {
+     "builds": 1,
+     "shapes": [
+      [
+       846,
+       241
+      ]
+     ],
+     "runs": 30,
+     "warm_runs": 29,
+     "simplex_iterations": 1475
+    },
+    "total_ms_excl_setup": 322.315,
+    "median_ms": 27.806,
+    "shared_constructor_ms": 17.316,
+    "import_cplex_ms": 13.978,
+    "loadavg_start": [
+     14.82,
+     12.78,
+     9.22
+    ],
+    "loadavg_end": [
+     13.85,
+     12.64,
+     9.21
+    ]
+   },
+   {
+    "file": "t3_block_s3_ours_r3.json",
+    "success": true,
+    "steps": 13,
+    "fail_reason": null,
+    "final_error_rad": 0.093,
+    "final_error_deg": 5.328,
+    "time_limit_s": 5.0,
+    "setup_ms": 747.544,
+    "setup_at_control_step": 0,
+    "lp_model_builds": [
+     {
+      "ms": 747.544,
+      "control_step": 0
+     }
+    ],
+    "later_rebuilds_ms_in_per_step": [],
+    "per_step_ms": [
+     23.307,
+     5.246,
+     10.316,
+     6.435,
+     8.082,
+     20.416,
+     21.614,
+     36.153,
+     18.757,
+     15.332,
+     12.149,
+     10.998,
+     15.783
+    ],
+    "per_step_raw_rat_ms": [
+     770.851,
+     5.246,
+     10.316,
+     6.435,
+     8.082,
+     20.416,
+     21.614,
+     36.153,
+     18.757,
+     15.332,
+     12.149,
+     10.998,
+     15.783
+    ],
+    "search_ms": [
+     1.118,
+     0.675,
+     1.058,
+     0.944,
+     0.938,
+     2.261,
+     2.059,
+     2.848,
+     2.615,
+     1.544,
+     1.536,
+     1.614,
+     1.854
+    ],
+    "lp_solver_ms": [
+     6.319,
+     2.029,
+     2.231,
+     2.068,
+     1.488,
+     5.308,
+     11.64,
+     14.304,
+     11.023,
+     7.864,
+     7.762,
+     6.463,
+     9.274
+    ],
+    "problem_build_ms": [
+     749.798,
+     1.411,
+     2.823,
+     2.075,
+     2.094,
+     1.365,
+     1.819,
+     1.912,
+     2.097,
+     1.374,
+     1.35,
+     1.328,
+     1.864
+    ],
+    "lp_calls": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     3,
+     3,
+     4,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "lp_pool": {
+     "builds": 1,
+     "shapes": [
+      [
+       846,
+       241
+      ]
+     ],
+     "runs": 30,
+     "warm_runs": 29,
+     "simplex_iterations": 1475
+    },
+    "total_ms_excl_setup": 204.589,
+    "median_ms": 15.332,
+    "shared_constructor_ms": 17.701,
+    "import_cplex_ms": 16.914,
+    "loadavg_start": [
+     12.29,
+     12.42,
+     9.28
+    ],
+    "loadavg_end": [
+     12.49,
+     12.46,
+     9.33
+    ]
+   },
+   {
+    "file": "t3_block_s3_ours_r4.json",
+    "success": true,
+    "steps": 13,
+    "fail_reason": null,
+    "final_error_rad": 0.093,
+    "final_error_deg": 5.328,
+    "time_limit_s": 5.0,
+    "setup_ms": 610.325,
+    "setup_at_control_step": 0,
+    "lp_model_builds": [
+     {
+      "ms": 610.325,
+      "control_step": 0
+     }
+    ],
+    "later_rebuilds_ms_in_per_step": [],
+    "per_step_ms": [
+     12.838,
+     6.957,
+     5.355,
+     5.597,
+     6.034,
+     19.877,
+     14.391,
+     22.788,
+     16.839,
+     26.482,
+     18.189,
+     14.087,
+     18.554
+    ],
+    "per_step_raw_rat_ms": [
+     623.163,
+     6.957,
+     5.355,
+     5.597,
+     6.034,
+     19.877,
+     14.391,
+     22.788,
+     16.839,
+     26.482,
+     18.189,
+     14.087,
+     18.554
+    ],
+    "search_ms": [
+     1.351,
+     0.684,
+     0.69,
+     0.912,
+     0.733,
+     2.147,
+     1.715,
+     2.667,
+     2.066,
+     2.165,
+     2.471,
+     2.292,
+     2.37
+    ],
+    "lp_solver_ms": [
+     6.952,
+     2.074,
+     2.132,
+     2.006,
+     1.282,
+     6.96,
+     9.334,
+     15.317,
+     10.874,
+     11.867,
+     11.317,
+     7.71,
+     9.774
+    ],
+    "problem_build_ms": [
+     613.08,
+     1.43,
+     1.443,
+     1.908,
+     1.62,
+     1.958,
+     1.617,
+     1.918,
+     1.835,
+     1.98,
+     2.216,
+     2.049,
+     2.02
+    ],
+    "lp_calls": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     3,
+     3,
+     4,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "lp_pool": {
+     "builds": 1,
+     "shapes": [
+      [
+       846,
+       241
+      ]
+     ],
+     "runs": 30,
+     "warm_runs": 29,
+     "simplex_iterations": 1475
+    },
+    "total_ms_excl_setup": 187.988,
+    "median_ms": 14.391,
+    "shared_constructor_ms": 17.415,
+    "import_cplex_ms": 15.498,
+    "loadavg_start": [
+     18.51,
+     13.89,
+     10.0
+    ],
+    "loadavg_end": [
+     16.81,
+     13.68,
+     9.97
+    ]
+   },
+   {
+    "file": "t3_block_s3_ours_r5.json",
+    "success": true,
+    "steps": 13,
+    "fail_reason": null,
+    "final_error_rad": 0.093,
+    "final_error_deg": 5.328,
+    "time_limit_s": 5.0,
+    "setup_ms": 946.611,
+    "setup_at_control_step": 0,
+    "lp_model_builds": [
+     {
+      "ms": 946.611,
+      "control_step": 0
+     }
+    ],
+    "later_rebuilds_ms_in_per_step": [],
+    "per_step_ms": [
+     17.674,
+     9.087,
+     7.106,
+     7.841,
+     5.966,
+     21.484,
+     28.175,
+     63.115,
+     27.319,
+     29.184,
+     18.481,
+     14.936,
+     15.627
+    ],
+    "per_step_raw_rat_ms": [
+     964.285,
+     9.087,
+     7.106,
+     7.841,
+     5.966,
+     21.484,
+     28.175,
+     63.115,
+     27.319,
+     29.184,
+     18.481,
+     14.936,
+     15.627
+    ],
+    "search_ms": [
+     1.417,
+     0.708,
+     0.704,
+     0.843,
+     0.747,
+     2.165,
+     2.103,
+     2.756,
+     1.714,
+     1.576,
+     1.559,
+     2.096,
+     2.074
+    ],
+    "lp_solver_ms": [
+     6.995,
+     2.089,
+     2.1,
+     1.586,
+     1.266,
+     6.961,
+     11.745,
+     29.708,
+     11.0,
+     11.011,
+     10.75,
+     7.455,
+     9.293
+    ],
+    "problem_build_ms": [
+     949.222,
+     1.416,
+     1.446,
+     1.771,
+     1.703,
+     2.028,
+     2.039,
+     1.866,
+     1.673,
+     1.379,
+     1.365,
+     1.894,
+     1.853
+    ],
+    "lp_calls": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     3,
+     3,
+     4,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "lp_pool": {
+     "builds": 1,
+     "shapes": [
+      [
+       846,
+       241
+      ]
+     ],
+     "runs": 30,
+     "warm_runs": 29,
+     "simplex_iterations": 1475
+    },
+    "total_ms_excl_setup": 265.995,
+    "median_ms": 17.674,
+    "shared_constructor_ms": 17.257,
+    "import_cplex_ms": 14.983,
+    "loadavg_start": [
+     15.13,
+     13.94,
+     10.25
+    ],
+    "loadavg_end": [
+     19.9,
+     15.0,
+     10.66
+    ]
+   }
+  ],
+  "e2e": [
+   {
+    "file": "t3_block_s3_e2e_r1.json",
+    "success": true,
+    "steps": 13,
+    "fail_reason": null,
+    "final_error_rad": 0.093,
+    "final_error_deg": 5.328,
+    "solver": "cplex",
+    "time_limit_s": 0.1,
+    "setup_ms": 78.997,
+    "constructor_total_ms": 96.193,
+    "shared_constructor_ms": 17.196,
+    "constructor_parts_ms": {
+     "fit_geometry": 1.101,
+     "build_matrices": 12.72,
+     "build_cplex_model": 78.997
+    },
+    "per_step_ms": [
+     18.964,
+     31.842,
+     26.359,
+     35.62,
+     38.839,
+     24.167,
+     28.161,
+     45.034,
+     26.014,
+     31.781,
+     42.038,
+     35.901,
+     37.944
+    ],
+    "solver_call_ms": [
+     17.818,
+     31.083,
+     25.519,
+     34.848,
+     37.996,
+     23.416,
+     27.384,
+     44.285,
+     25.327,
+     31.11,
+     41.377,
+     35.201,
+     37.289
+    ],
+    "statuses": [
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal, tolerance",
+     "integer optimal, tolerance",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal solution"
+    ],
+    "status_counts": {
+     "integer optimal solution": 8,
+     "integer optimal, tolerance": 5
+    },
+    "time_limit_hits": 0,
+    "total_ms_excl_setup": 422.663,
+    "median_ms": 31.842,
+    "import_cplex_ms": 15.221,
+    "loadavg_start": [
+     21.97,
+     13.24,
+     9.12
+    ],
+    "loadavg_end": [
+     20.12,
+     13.13,
+     9.12
+    ]
+   },
+   {
+    "file": "t3_block_s3_e2e_r2.json",
+    "success": true,
+    "steps": 13,
+    "fail_reason": null,
+    "final_error_rad": 0.093,
+    "final_error_deg": 5.328,
+    "solver": "cplex",
+    "time_limit_s": 0.1,
+    "setup_ms": 61.885,
+    "constructor_total_ms": 74.623,
+    "shared_constructor_ms": 12.739,
+    "constructor_parts_ms": {
+     "fit_geometry": 1.033,
+     "build_matrices": 9.339,
+     "build_cplex_model": 61.885
+    },
+    "per_step_ms": [
+     22.349,
+     32.025,
+     25.455,
+     34.534,
+     38.396,
+     24.49,
+     28.481,
+     45.048,
+     26.019,
+     31.74,
+     41.852,
+     35.696,
+     39.854
+    ],
+    "solver_call_ms": [
+     20.698,
+     31.289,
+     24.689,
+     33.894,
+     37.637,
+     23.77,
+     27.787,
+     44.37,
+     25.405,
+     31.169,
+     41.281,
+     35.102,
+     39.22
+    ],
+    "statuses": [
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal, tolerance",
+     "integer optimal, tolerance",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal solution"
+    ],
+    "status_counts": {
+     "integer optimal solution": 8,
+     "integer optimal, tolerance": 5
+    },
+    "time_limit_hits": 0,
+    "total_ms_excl_setup": 425.94,
+    "median_ms": 32.025,
+    "import_cplex_ms": 10.581,
+    "loadavg_start": [
+     15.61,
+     12.86,
+     9.2
+    ],
+    "loadavg_end": [
+     14.82,
+     12.78,
+     9.22
+    ]
+   },
+   {
+    "file": "t3_block_s3_e2e_r3.json",
+    "success": true,
+    "steps": 13,
+    "fail_reason": null,
+    "final_error_rad": 0.093,
+    "final_error_deg": 5.328,
+    "solver": "cplex",
+    "time_limit_s": 0.1,
+    "setup_ms": 61.005,
+    "constructor_total_ms": 74.265,
+    "shared_constructor_ms": 13.26,
+    "constructor_parts_ms": {
+     "fit_geometry": 1.307,
+     "build_matrices": 9.677,
+     "build_cplex_model": 61.005
+    },
+    "per_step_ms": [
+     18.987,
+     32.238,
+     25.586,
+     35.098,
+     37.957,
+     23.807,
+     27.84,
+     44.637,
+     25.878,
+     31.61,
+     41.943,
+     35.573,
+     38.506
+    ],
+    "solver_call_ms": [
+     17.862,
+     31.475,
+     24.786,
+     34.381,
+     37.287,
+     23.177,
+     27.227,
+     43.955,
+     25.241,
+     31.019,
+     41.337,
+     34.906,
+     37.768
+    ],
+    "statuses": [
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal, tolerance",
+     "integer optimal, tolerance",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal solution"
+    ],
+    "status_counts": {
+     "integer optimal solution": 8,
+     "integer optimal, tolerance": 5
+    },
+    "time_limit_hits": 0,
+    "total_ms_excl_setup": 419.661,
+    "median_ms": 32.238,
+    "import_cplex_ms": 10.53,
+    "loadavg_start": [
+     12.13,
+     12.38,
+     9.32
+    ],
+    "loadavg_end": [
+     12.04,
+     12.36,
+     9.33
+    ]
+   },
+   {
+    "file": "t3_block_s3_e2e_r4.json",
+    "success": true,
+    "steps": 13,
+    "fail_reason": null,
+    "final_error_rad": 0.093,
+    "final_error_deg": 5.328,
+    "solver": "cplex",
+    "time_limit_s": 0.1,
+    "setup_ms": 76.744,
+    "constructor_total_ms": 94.879,
+    "shared_constructor_ms": 18.135,
+    "constructor_parts_ms": {
+     "fit_geometry": 2.063,
+     "build_matrices": 12.728,
+     "build_cplex_model": 76.744
+    },
+    "per_step_ms": [
+     19.675,
+     32.105,
+     25.454,
+     34.152,
+     37.384,
+     23.573,
+     28.413,
+     44.364,
+     25.76,
+     31.542,
+     41.51,
+     35.018,
+     37.725
+    ],
+    "solver_call_ms": [
+     17.998,
+     31.376,
+     24.677,
+     33.556,
+     36.789,
+     22.985,
+     27.654,
+     43.669,
+     25.126,
+     30.938,
+     40.947,
+     34.468,
+     37.101
+    ],
+    "statuses": [
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal, tolerance",
+     "integer optimal, tolerance",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal solution"
+    ],
+    "status_counts": {
+     "integer optimal solution": 8,
+     "integer optimal, tolerance": 5
+    },
+    "time_limit_hits": 0,
+    "total_ms_excl_setup": 416.674,
+    "median_ms": 32.105,
+    "import_cplex_ms": 14.576,
+    "loadavg_start": [
+     19.34,
+     13.98,
+     10.01
+    ],
+    "loadavg_end": [
+     18.51,
+     13.89,
+     10.0
+    ]
+   },
+   {
+    "file": "t3_block_s3_e2e_r5.json",
+    "success": true,
+    "steps": 13,
+    "fail_reason": null,
+    "final_error_rad": 0.093,
+    "final_error_deg": 5.328,
+    "solver": "cplex",
+    "time_limit_s": 0.1,
+    "setup_ms": 91.128,
+    "constructor_total_ms": 112.354,
+    "shared_constructor_ms": 21.226,
+    "constructor_parts_ms": {
+     "fit_geometry": 1.095,
+     "build_matrices": 17.804,
+     "build_cplex_model": 91.128
+    },
+    "per_step_ms": [
+     19.07,
+     32.055,
+     25.856,
+     35.119,
+     38.416,
+     23.864,
+     27.963,
+     45.93,
+     27.942,
+     33.941,
+     45.16,
+     37.919,
+     40.611
+    ],
+    "solver_call_ms": [
+     17.935,
+     31.336,
+     25.03,
+     34.371,
+     37.612,
+     23.171,
+     27.325,
+     45.096,
+     27.142,
+     33.148,
+     44.338,
+     37.125,
+     39.807
+    ],
+    "statuses": [
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal, tolerance",
+     "integer optimal, tolerance",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal solution",
+     "integer optimal, tolerance",
+     "integer optimal solution"
+    ],
+    "status_counts": {
+     "integer optimal solution": 8,
+     "integer optimal, tolerance": 5
+    },
+    "time_limit_hits": 0,
+    "total_ms_excl_setup": 433.847,
+    "median_ms": 33.941,
+    "import_cplex_ms": 12.26,
+    "loadavg_start": [
+     19.9,
+     15.0,
+     10.66
+    ],
+    "loadavg_end": [
+     18.62,
+     14.89,
+     10.67
+    ]
+   }
+  ]
+ },
+ "commands": {
+  "ours": "run_episode3.py --task block --setting 3 --mode ours --time-limit 5",
+  "e2e": "run_episode3.py --task block --setting 3 --mode e2e",
+  "env": "CUDA_VISIBLE_DEVICES=2, /home/yiyuanp/miniconda3/envs/issac_dex/bin/python"
+ }
+}

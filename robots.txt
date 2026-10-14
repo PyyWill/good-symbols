@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pyywill.github.io/good-symbols/sitemap.xml

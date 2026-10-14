@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}body{margin:0}</style>
+<link rel="canonical" href="https://pyywill.github.io/good-symbols/">
+<meta property="og:url" content="https://pyywill.github.io/good-symbols/">
+<title>What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?</title>
+<meta name="description" content="A symbol is useful for hybrid discrete–continuous planning when fixing it preserves the optimum and leaves a problem that is easy to solve: an exact linear program for piecewise-affine MILPs, a single descent for diffusion and energy-based policies. Counterexample-guided partition refinement (CPR) invents such solver-sufficient symbols.">
+<meta name="keywords" content="hybrid discrete-continuous planning, symbol invention, solver-sufficient symbols, counterexample-guided partition refinement, mixed-integer linear programming, piecewise-affine systems, total unimodularity, diffusion policy, energy-based policy, contact-rich manipulation, task and motion planning, behavior steering">
+<meta name="citation_title" content="What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?">
+<meta name="citation_author" content="Yiyuan Pan">
+<meta name="citation_author_institution" content="Carnegie Mellon University">
+<meta name="citation_author" content="Changliu Liu">
+<meta name="citation_author_institution" content="Carnegie Mellon University">
+<meta name="citation_author" content="Jiayuan Mao">
+<meta name="citation_author_institution" content="University of Pennsylvania">
+<meta name="citation_publication_date" content="2026">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?">
+<meta property="og:description" content="A symbol is useful for hybrid discrete–continuous planning when fixing it preserves the optimum and leaves a problem that is easy to solve: an exact linear program for piecewise-affine MILPs, a single descent for diffusion and energy-based policies. Counterexample-guided partition refinement (CPR) invents such solver-sufficient symbols.">
+<meta property="og:image" content="https://pyywill.github.io/good-symbols/media/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?">
+<meta name="twitter:description" content="A symbol is useful for hybrid discrete–continuous planning when fixing it preserves the optimum and leaves a problem that is easy to solve: an exact linear program for piecewise-affine MILPs, a single descent for diffusion and energy-based policies. Counterexample-guided partition refinement (CPR) invents such solver-sufficient symbols.">
+<meta name="twitter:image" content="https://pyywill.github.io/good-symbols/media/og.jpg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ScholarlyArticle", "headline": "What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?", "name": "What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?", "abstract": "The physical world has continuous state and action spaces, yet robot planning often benefits from hybrid discrete-continuous formulations that explicitly expose combinatorial structure, such as contact modes or discrete primitive actions. Existing methods typically rely on human-defined symbol sets or symbols derived from language supervision, without asking what makes a symbol computationally useful. In this paper, we take an inference-algorithm-centric view to define usefulness: a good symbol should expose the discrete commitments that simplify solving the original planning problem. We first introduce the concept of solver-sufficient symbolization by studying finite-horizon piecewise-affine systems, for which solver sufficiency can be precisely characterized, and develop a counterexample-guided algorithm for symbol invention. We then extend this principle to invent symbols for optimization objectives parameterized by general neural networks as energy functions, showing that solver-sufficient symbols can nevertheless be induced from their continuous optimization landscapes. Experiments on simulated and real-robot tasks show that the resulting symbols reduce solving cost while preserving solution quality, while also improving interpretability and steerability. Furthermore, our theoretical and algorithmic insights help explain why certain human-defined symbols are computationally useful.", "description": "A symbol is useful for hybrid discrete–continuous planning when fixing it preserves the optimum and leaves a problem that is easy to solve: an exact linear program for piecewise-affine MILPs, a single descent for diffusion and energy-based policies. Counterexample-guided partition refinement (CPR) invents such solver-sufficient symbols.", "keywords": ["hybrid discrete-continuous planning", "symbol invention", "solver-sufficient symbols", "counterexample-guided partition refinement", "mixed-integer linear programming", "piecewise-affine systems", "total unimodularity", "diffusion policy", "energy-based policy", "contact-rich manipulation", "task and motion planning", "behavior steering"], "inLanguage": "en", "datePublished": "2026", "author": [{"@type": "Person", "name": "Yiyuan Pan", "affiliation": {"@type": "Organization", "name": "Carnegie Mellon University"}}, {"@type": "Person", "name": "Changliu Liu", "affiliation": {"@type": "Organization", "name": "Carnegie Mellon University"}}, {"@type": "Person", "name": "Jiayuan Mao", "affiliation": {"@type": "Organization", "name": "University of Pennsylvania"}}], "image": "https://pyywill.github.io/good-symbols/media/og.jpg", "url": "https://pyywill.github.io/good-symbols/"}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="data/hero_model.json" as="fetch" crossorigin>
+<link rel="preload" href="data/hero_map.png" as="image">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caladea:ital,wght@0,400;0,700;1,400;1,700&family=Carlito:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400&family=Arimo:wght@400;700&family=STIX+Two+Math&display=swap">
+<style>
+/* Layout: one 960px column read top to bottom, like a paper: heading, justified text and figures all start at the same
+   left edge and span the column. Palette: coolwarm (the paper's energy colormap) on a cool white ground; "symbol blue"
+   marks everything that is a symbol. */
+:root {
+  --bg: #ffffff;
+  --bg-alt: #f4f5f8;
+  --paper: #ffffff;
+  --fig-bg: transparent;
+  --fig-pad: 0px;
+  --fig-shadow: none;
+  --ink: #191c22;
+  --ink-2: #4a5060;
+  --ink-3: #868c9b;
+  --rule: #e3e6ec;
+  --cool: #3b4cc0;
+  --cool-soft: #e8ebf9;
+  --warm: #b40426;
+  --sym: #3f56c9;
+  --sym-ink: #ffffff;
+  --mid: #dddcdb;
+  --shadow: 0 1px 2px rgba(20, 24, 40, .06), 0 8px 24px rgba(20, 24, 40, .06);
+  --font-serif: "Caladea", Cambria, "Cambria Math", Georgia, serif;
+  --font-ui: "Carlito", Calibri, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --stage: 860px; --gap: clamp(12px, 2vw, 22px);
+  --col: 40rem;
+  --gutter: clamp(16px, 5vw, 64px);
+  --sec-pad: clamp(44px, 6vw, 76px);
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1116; --bg-alt: #151821; --paper: #f7f7f5; --ink: #e7e9ee; --ink-2: #aab0be; --ink-3: #737a8b; --rule: #262a34;
+    --cool: #8c9cf2; --cool-soft: #1d2236; --warm: #f07a85; --sym: #7b8ff0; --sym-ink: #0f1116; --mid: #3a3d44; --fig-bg: #f7f7f5; --fig-pad: 14px; --fig-shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .35);
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .35); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1116; --bg-alt: #151821; --paper: #f7f7f5; --ink: #e7e9ee; --ink-2: #aab0be; --ink-3: #737a8b; --rule: #262a34;
+  --cool: #8c9cf2; --cool-soft: #1d2236; --warm: #f07a85; --sym: #7b8ff0; --sym-ink: #0f1116; --mid: #3a3d44; --fig-bg: #f7f7f5; --fig-pad: 14px; --fig-shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .35);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .35); color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-serif); font-size: 1rem; line-height: 1.58;
+  padding-inline: var(--gutter); padding-block: 0; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+a { color: var(--cool); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--cool); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { font-weight: 700; text-wrap: balance; letter-spacing: -0.01em; margin: 0; }
+p { margin: 0; text-wrap: pretty; }
+.stage { max-width: var(--stage); margin-inline: auto; }
+.col { max-width: var(--col); margin-inline: auto; }
+.just { text-align: justify; hyphens: none; }
+.m { font-family: var(--font-serif); font-style: italic; white-space: nowrap; }
+.m sub, .m sup { font-style: normal; font-size: .7em; }
+
+/* ---------- hero ---------- */
+.hero { padding-block: clamp(32px, 5vw, 60px) clamp(20px, 3vw, 28px); }
+.hero h1 { font-size: clamp(1.8rem, 3.6vw, 2.7rem); line-height: 1.1; max-width: 100%; letter-spacing: -0.018em; }
+.hero h1 .key { font-style: italic; color: var(--sym); font-weight: 700; padding-inline: .04em; background: linear-gradient(transparent 70%, var(--cool-soft) 70%, var(--cool-soft) 94%, transparent 94%); }
+.hero h1 .dash { color: var(--ink-3); font-weight: 400; }
+.authors { margin-top: 18px; font-family: var(--font-ui); font-size: 1.02rem; display: flex; flex-wrap: wrap; gap: 6px 24px; }
+.authors sup { color: var(--ink-3); font-size: .72em; margin-left: 1px; }
+.affils { margin-top: 6px; font-family: var(--font-ui); font-size: .95rem; color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.links { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { font-family: var(--font-ui); font-size: .95rem; display: inline-flex; align-items: center; gap: 8px; padding: 8px 15px 8px 13px; border-radius: 999px;
+  border: 1px solid var(--rule); color: var(--ink); text-decoration: none; background: var(--bg); }
+.btn svg { width: 16px; height: 16px; flex: none; }
+.btn .soon { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); border-left: 1px solid var(--rule); padding-left: 8px; }
+.btn[aria-disabled="true"] { cursor: default; }
+.hero-fig { margin: clamp(22px, 3vw, 32px) 0 0; }
+.hero-canvas-wrap { position: relative; border-radius: 12px; overflow: hidden; background: var(--bg-alt); aspect-ratio: 2 / 1; max-width: 100%; box-shadow: var(--shadow); }
+.hero-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
+.hero-bar { margin-top: 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 18px; font-family: var(--font-ui); font-size: .95rem; color: var(--ink-2); }
+.phase { display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: baseline; min-height: 1.5em; }
+.phase b { color: var(--ink); font-weight: 700; }
+.hero-meta { display: flex; align-items: center; gap: 16px; }
+.hero-cbar { display: inline-flex; align-items: center; gap: 6px; font-size: .84rem; white-space: nowrap; }
+.hero-cbar i { display: block; width: 84px; height: 7px; border-radius: 4px; background: linear-gradient(90deg, #3b4cc0, #8db0fe, #dddcdb, #f49a7b, #b40426); }
+.hero-replay { font-family: var(--font-ui); font-size: .88rem; border: 1px solid var(--rule); background: var(--bg); color: var(--ink-2); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+.thesis { margin-top: clamp(16px, 2.4vw, 22px); font-size: clamp(1.15rem, 1.9vw, 1.4rem); line-height: 1.3; font-style: italic; }
+.thesis em { font-style: normal; color: var(--sym); }
+.story { margin-top: 14px; display: grid; gap: 10px; color: var(--ink-2); text-align: justify; hyphens: none; }
+.story b { color: var(--ink); }
+@media (max-width: 600px) { .hero-cbar { display: none; } }
+
+/* ---------- sections ---------- */
+section.sec { padding-block: var(--sec-pad); }
+section.alt { background: var(--bg-alt); margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
+.sec-head { display: flex; flex-direction: column; gap: 9px; margin-bottom: clamp(18px, 2.6vw, 28px); }
+.sec-head h2 { font-size: clamp(1.4rem, 2.3vw, 1.75rem); line-height: 1.15; }
+.lead { font-size: 1.02rem; color: var(--ink-2); text-align: justify; hyphens: none; }
+.lead-col { display: flex; flex-direction: column; }
+.lead-col .eq { margin: clamp(20px, 3vw, 28px) 0 clamp(16px, 2.4vw, 24px); }
+.rail { display: flex; flex-direction: column; gap: 10px; }
+
+.contribs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
+.contrib { border-top: 2px solid var(--ink); padding-top: 16px; display: grid; gap: 8px; align-content: start; color: inherit; text-decoration: none; transition: border-color .2s ease; }
+a.contrib:hover { border-top-color: var(--sym); }
+a.contrib:hover h3 { color: var(--sym); }
+.qn { display: inline-block; font-family: var(--font-ui); font-weight: 700; font-size: .62em; line-height: 1; letter-spacing: .02em; color: var(--sym-ink); background: var(--sym); padding: .28em .45em .24em; border-radius: 6px; margin-right: .5em; vertical-align: .2em; }
+.contrib h3 { font-size: 1.1rem; line-height: 1.2; }
+.contrib p { font-size: .94rem; color: var(--ink-2); text-align: left; }
+@media (max-width: 860px) { .contribs { grid-template-columns: 1fr; } }
+
+/* equation: each term carries its own brace, so braces always match the term width */
+.eq { display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; gap: 0 .5em; margin: clamp(26px, 4vw, 40px) 0; font-size: clamp(1.15rem, 2.2vw, 1.55rem); }
+.eq .term { display: inline-flex; flex-direction: column; align-items: center; }
+.eq .f { white-space: nowrap; line-height: 1.6; display: inline-flex; align-items: center; }
+.eq .op { line-height: 1.6; }
+.eq .brace { width: 100%; height: 12px; display: block; margin-top: 2px; }
+.eq .brace path { fill: none; stroke: var(--ink-3); stroke-width: 1.3; vector-effect: non-scaling-stroke; }
+.eq .s .brace path { stroke: var(--sym); }
+.eq .lbl { font-family: var(--font-ui); font-size: .58em; color: var(--ink-2); margin-top: 4px; white-space: nowrap; letter-spacing: .02em; }
+.eq .s .lbl { color: var(--sym); font-weight: 700; }
+.eq i { font-style: italic; }
+.eq .ss { display: inline-flex; flex-direction: column; font-size: .62em; line-height: 1.05; margin-left: .05em; text-align: left; }
+.eq .ss i, .eq .ss span { display: block; }
+.eq .minop { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1; }
+.eq .minop small { font-size: .6em; }
+
+.tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--bg); border: 1px solid var(--rule); font-family: var(--font-ui); }
+.tabs button { border: 0; background: transparent; color: var(--ink-2); font: inherit; font-size: .95rem; padding: 7px 16px; border-radius: 999px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+.tabs-row { display: flex; margin-top: 18px; }
+.inst { margin-top: 16px; display: grid; gap: 14px; }
+.inst .text { display: flex; flex-direction: column; gap: 12px; }
+.inst .text > div { display: grid; gap: 10px; }
+.inst h3 { font-size: 1.15rem; line-height: 1.2; }
+.inst p { color: var(--ink-2); text-align: justify; hyphens: none; }
+.inst .guarantee { padding: 14px 18px; border-left: 3px solid var(--sym); background: var(--cool-soft); border-radius: 0 8px 8px 0; font-size: 1.02rem; color: var(--ink); }
+.figcard { background: var(--paper); border-radius: var(--r); padding: clamp(10px, 1.6vw, 18px); box-shadow: var(--shadow); }
+.figcard svg { width: 100%; height: auto; display: block; }
+.figcard.cpr-fig { background: var(--fig-bg); padding: var(--fig-pad); box-shadow: var(--fig-shadow); }
+.pptfig text[font-family^="Cambria Math"] { font-family: "STIX Two Math", "Cambria Math", serif !important; }
+.pptfig text[font-family^="Cambria,"] { font-family: "Caladea", Cambria, serif !important; }
+.pptfig text[font-family^="Times New Roman"] { font-family: "Tinos", "Times New Roman", serif !important; }
+.pptfig text[font-family^="Arial"] { font-family: "Arimo", Arial, sans-serif !important; }
+
+/* cpr stepper */
+.cpr-steps { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.cpr-steps button { font-family: var(--font-ui); font-size: .92rem; border: 1px solid var(--rule); background: var(--bg); color: var(--ink-2); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.cpr-steps button[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); }
+.cpr-cap { margin-top: 16px; min-height: 3.4em; color: var(--ink-2); }
+
+/* ---------- interactive ---------- */
+.lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gap); }
+.pane { position: relative; border-radius: 12px; overflow: hidden; background: #e9eaee; box-shadow: var(--shadow); aspect-ratio: 1 / 1; max-width: 100%; }
+.lab .pane { aspect-ratio: 4 / 3; }
+.pane canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+.pane .tag { position: absolute; left: 12px; top: 10px; font-family: var(--font-ui); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: #1b1e24; background: rgba(255, 255, 255, .88); padding: 4px 9px; border-radius: 6px; pointer-events: none; }
+.pane .tag.br { left: auto; top: auto; right: 12px; bottom: 12px; }
+.pane .hint { position: absolute; right: 12px; top: 10px; font-family: var(--font-ui); font-size: .82rem; color: #1b1e24; background: rgba(255, 255, 255, .88); padding: 4px 9px; border-radius: 6px; pointer-events: none; transition: opacity .4s ease; }
+.hint .narrow { display: none; }
+@media (max-width: 600px) { .hint .wide { display: none; } .hint .narrow { display: inline; } }
+.pane .readout { position: absolute; left: 12px; bottom: 10px; right: 12px; display: flex; gap: 8px; flex-wrap: wrap; pointer-events: none; }
+.chip { font-family: var(--font-ui); font-size: .86rem; background: rgba(255, 255, 255, .92); color: #1b1e24; padding: 4px 10px; border-radius: 999px; display: inline-flex; gap: 6px; align-items: center; font-variant-numeric: tabular-nums; border: 1px solid rgba(0, 0, 0, .06); }
+.chip b { font-weight: 700; }
+.chip.win { background: #1b1e24; color: #fff; }
+h2.with-btn { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+h2.with-btn .ghostbtn { font-size: .85rem; padding: 6px 14px; letter-spacing: 0; }
+.ghostbtn { font-family: var(--font-ui); font-size: .95rem; border: 1px solid var(--rule); border-radius: 999px; padding: 10px 18px; background: var(--bg); color: var(--ink-2); cursor: pointer; }
+.symtile { display: inline-grid; place-items: center; min-width: 30px; height: 24px; padding-inline: 7px; border-radius: 6px; background: var(--sym); color: var(--sym-ink); font-family: var(--font-serif); font-style: italic; font-size: .95rem; }
+@media (max-width: 860px) { .lab { grid-template-columns: 1fr; } }
+
+/* ---------- results ---------- */
+.dex-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px var(--gap); }
+.dex-head { grid-column: var(--e); grid-row: 1; display: flex; gap: 8px; align-items: baseline; font-family: var(--font-ui); font-weight: 700; font-size: .95rem; color: var(--ink); }
+.dex-head span { font-weight: 400; font-size: .85rem; color: var(--ink-3); }
+.dex-p { grid-column: var(--e); grid-row: calc(var(--m) + 2); display: grid; gap: 6px; align-content: start; }
+.dex-p .mtag { position: absolute; right: 10px; top: 8px; font-family: var(--font-ui); font-size: .8rem; font-weight: 700; color: #1b1e24; background: rgba(255, 255, 255, .92); padding: 3px 9px; border-radius: 6px; }
+.dex-p .mtag.us { background: var(--sym); color: #fff; }
+.dex-read { display: flex; justify-content: space-between; gap: 8px; font-family: var(--font-ui); font-size: .86rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.dex-read .ms { color: var(--ink); font-weight: 700; }
+.dex-p.done .dex-read .st b { color: var(--ink); }
+@media (max-width: 600px) { .dex-read { font-size: .8rem; } .dex-read .n { display: none; } }
+.dex-p.done .vid { box-shadow: var(--shadow), 0 0 0 2px #2f9e5b; }
+@media (max-width: 860px) {
+  .dex-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dex-head { grid-column: 1 / -1; grid-row: calc(var(--e) * 2 - 1); margin-top: 6px; }
+  .dex-p { grid-column: calc(var(--m) + 1); grid-row: calc(var(--e) * 2); }
+}
+.vid { position: relative; border-radius: 12px; overflow: hidden; background: #ededed; box-shadow: var(--shadow); }
+.vid video { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
+.vid .vtag { position: absolute; left: 10px; top: 8px; font-family: var(--font-ui); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: #1b1e24; background: rgba(255, 255, 255, .88); padding: 3px 8px; border-radius: 6px; }
+.vid .vspeed { position: absolute; right: 10px; top: 8px; font-family: var(--font-ui); font-size: .78rem; color: #1b1e24; background: rgba(255, 255, 255, .88); padding: 3px 8px; border-radius: 6px; }
+.race { display: grid; gap: 7px; font-family: var(--font-ui); font-size: .86rem; color: var(--ink-2); }
+.race .row { display: grid; grid-template-columns: 5.6rem minmax(0, 1fr) 4.6rem; gap: 8px; align-items: center; }
+.race .track { height: 10px; border-radius: 5px; background: var(--bg-alt); overflow: hidden; }
+.race .bar { height: 100%; width: 0; border-radius: 5px; background: var(--ink-3); }
+.race .row.us .bar { background: var(--sym); }
+.race .row.us { color: var(--ink); font-weight: 700; }
+.race .v { text-align: right; font-variant-numeric: tabular-nums; }
+.race .x { justify-self: center; font-size: .82rem; color: var(--ink-3); }
+.dex-sum { margin-top: 14px; color: var(--ink-2); text-align: justify; hyphens: none; }
+.res-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gap); align-items: start; margin-top: clamp(24px, 3.4vw, 36px); }
+.res-card { background: var(--bg-alt); border-radius: 14px; padding: clamp(16px, 2.2vw, 24px); display: grid; gap: 12px; }
+.res-card h3 { font-size: 1.08rem; }
+.res-card .sub { color: var(--ink-2); font-size: .98rem; }
+.chart { width: 100%; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart text { font-family: var(--font-ui); font-size: 12px; }
+.chart text:not([fill]) { fill: var(--ink-2); }
+.chart .ax { stroke: var(--rule); }
+.chart .tick { fill: var(--ink-3); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-family: var(--font-ui); font-size: .84rem; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.seg { display: flex; flex-wrap: wrap; gap: 4px; font-family: var(--font-ui); }
+.seg button { border: 1px solid var(--rule); background: var(--bg); color: var(--ink-2); border-radius: 999px; padding: 4px 11px; font: inherit; font-size: .85rem; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.suite { margin-top: clamp(44px, 6vw, 72px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px var(--gap); }
+.suite .grp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-content: start; }
+.suite .grp h4 { grid-column: 1 / -1; margin: 0 0 2px; font-family: var(--font-ui); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; }
+.suite figure { margin: 0; position: relative; }
+.suite .grp.six { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.suite .grp.six figure { grid-column: span 2; }
+.suite .grp.six figure.wide { grid-column: span 3; }
+.suite figure.wide img { aspect-ratio: 2.04 / 1; }
+.suite img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; border: 1px solid var(--rule); background: var(--bg-alt); }
+.suite figcaption { position: absolute; left: 6px; top: 6px; font-family: var(--font-ui); font-size: .76rem; font-weight: 700; color: #fff; background: rgba(20, 22, 28, .82); padding: 2px 7px; border-radius: 5px; }
+.suite .sep { border-left: 1px dashed var(--rule); }
+@media (max-width: 860px) { .res-grid { grid-template-columns: 1fr; } .suite { grid-template-columns: 1fr; } }
+details.full { margin-top: 22px; }
+details.full summary { font-family: var(--font-ui); cursor: pointer; color: var(--ink-2); font-size: .95rem; list-style: none; display: inline-flex; gap: 8px; align-items: center; }
+details.full summary::-webkit-details-marker { display: none; }
+details.full summary::before { content: "+"; display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--rule); font-size: .9rem; }
+details.full[open] summary::before { content: "–"; }
+.tablewrap { overflow-x: auto; margin-top: 14px; text-align: left; }
+table.data { border-collapse: collapse; font-family: var(--font-ui); font-size: .88rem; font-variant-numeric: tabular-nums; min-width: 620px; width: 100%; }
+table.data th, table.data td { padding: 7px 9px; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data thead th { color: var(--ink-3); font-weight: 700; font-size: .8rem; }
+table.data tr.ours td { font-weight: 700; color: var(--ink); background: var(--cool-soft); }
+table.data td { color: var(--ink-2); }
+
+/* ---------- steering ---------- */
+.players { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); margin-top: 18px; }
+.player .pane { aspect-ratio: 4 / 3; }
+.player .pane.video, .player .pane.wide { aspect-ratio: 16 / 9; }
+.player .pane.video { background: #111; }
+.player .pane video { width: 100%; height: 100%; display: block; object-fit: cover; }
+.player .pane .vspeed { position: absolute; right: 10px; top: 10px; font-family: var(--font-ui); font-size: .78rem; color: #1b1e24; background: rgba(255, 255, 255, .88); padding: 3px 8px; border-radius: 6px; }
+.player .cap { margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-family: var(--font-ui); font-size: .92rem; color: var(--ink-2); }
+.player .cap b { color: var(--ink); }
+@media (max-width: 860px) { .players { grid-template-columns: 1fr; } }
+
+/* ---------- human symbols ---------- */
+.hs { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--gap) calc(var(--gap) * 1.6); align-items: center; }
+.hs-text { display: grid; gap: 12px; color: var(--ink-2); text-align: justify; hyphens: none; }
+.hs-text b { color: var(--ink); }
+.hs h3 { font-size: 1.08rem; margin-bottom: 6px; }
+.hs .sub { color: var(--ink-2); font-size: 1rem; margin-bottom: 14px; }
+.semantics { display: grid; gap: 10px; }
+.sem-row { display: grid; grid-template-columns: 5.4rem repeat(3, minmax(0, 1fr)); gap: 8px; align-items: stretch; font-family: var(--font-ui); font-size: .88rem; }
+.sem-row.h { color: var(--ink-3); font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; }
+.sem-row .task { color: var(--ink); font-weight: 700; align-self: center; }
+.sem { border-radius: 8px; padding: 8px 10px; background: var(--bg-alt); border: 1px solid var(--rule); display: grid; gap: 4px; color: var(--ink-2); }
+.sem .f { font-family: var(--font-serif); font-style: italic; color: var(--ink); font-size: .94rem; }
+.sem.ours { background: var(--cool-soft); border-color: color-mix(in srgb, var(--sym) 40%, transparent); }
+.sem.ours .f { color: var(--sym); }
+@media (max-width: 900px) { .hs { grid-template-columns: 1fr; } .sem-row { grid-template-columns: 4.6rem repeat(3, minmax(0, 1fr)); font-size: .8rem; } }
+
+
+@media (max-width: 600px) { .lead, .just, .contrib p, .inst p, .story { text-align: left; } }
+@media (max-width: 600px) { .contrib p, .res-card .sub, .hs-text p, .cpr-cap { text-wrap: balance; } }
+.symtile { white-space: nowrap; }
+.js .rise { transition: opacity .8s cubic-bezier(.2, .7, .2, 1), transform .8s cubic-bezier(.2, .7, .2, 1); }
+.js .rise.wait { opacity: 0; transform: translateY(14px); }
+@media (prefers-reduced-motion: reduce) { .js .rise, .js .rise.wait { transition: none; opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+
+
+<main>
+<!-- ======================= HERO ======================= -->
+<section class="hero stage">
+  <h1>What Makes a <span class="key">Good Symbol</span> for Hybrid Discrete<span class="dash">–</span>Continuous Planning?</h1>
+  <div class="authors"><span>Yiyuan Pan<sup>1</sup></span><span>Changliu Liu<sup>1</sup></span><span>Jiayuan Mao<sup>2</sup></span></div>
+  <div class="affils"><span><sup>1</sup> Carnegie Mellon University</span><span><sup>2</sup> University of Pennsylvania</span></div>
+  <div class="links">
+    <a class="btn" aria-disabled="true" role="link" tabindex="0" title="Coming soon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 1.5h5.5L13 5v9.5H4z"/><path d="M9.5 1.5V5H13"/><path d="M6 8.5h5M6 11h5"/></svg>Paper<span class="soon">soon</span></a>
+    <a class="btn" aria-disabled="true" role="link" tabindex="0" title="Coming soon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 2.5l10 11M13 2.5l-10 11"/></svg>arXiv<span class="soon">soon</span></a>
+    <a class="btn" aria-disabled="true" role="link" tabindex="0" title="Coming soon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5.5 4L2 8l3.5 4M10.5 4L14 8l-3.5 4"/></svg>Code<span class="soon">soon</span></a>
+  </div>
+  <figure class="hero-fig">
+    <div class="hero-canvas-wrap">
+      <canvas id="hero-canvas" aria-label="Animated energy landscape: 24 random restarts settle in different basins and only 2 reach the lowest one; two cuts split the landscape into three regions; one descent per region finds the optimum."></canvas>
+      <noscript><img src="media/hero.jpg" width="1720" height="860" alt="Toy energy landscape split by two cuts into three regions R1, R2, R3, with one descent per region; the lowest floor, in R3, is the optimum." style="width:100%;height:100%;object-fit:cover"></noscript>
+    </div>
+    <div class="hero-bar">
+      <div class="phase" id="hero-phase" aria-live="polite"><b>Random restarts</b><span>descents land in different basins</span></div>
+      <div class="hero-meta">
+        <span class="hero-cbar">low <span class="m">h</span><i></i>high</span>
+        <button class="hero-replay" id="hero-replay" type="button">Replay</button>
+      </div>
+    </div>
+    <figcaption>
+      <p class="thesis">A good symbol is a commitment that leaves an <em>easy</em> problem behind.</p>
+      <div class="story">
+        <p><b>Learned policies hide their discrete choices.</b> Diffusion, flow-matching and energy-based policies can be read as minimising a learned energy <span class="m">h</span> over action sequences. Its basins encode distinct behaviours, such as passing an obstacle on the left or right, but none is exposed as a variable: which basin a sample reaches depends on its initial noise, so inference-time search needs many samples (in the map above, <span id="hero-hits">2</span> of 24 restarts reach the lowest basin) and can neither guarantee the best behaviour nor select one.</p>
+        <p><b>Solver-sufficient symbols make these choices explicit.</b> In resource-rational accounts from cognitive science, a useful symbol exposes a key commitment and abstracts details away, so that planning fits a bounded budget. To walk to the office with a bag, a person must at first plan their own motion and the bag's jointly; once “the bag is being carried” is settled, the bag's motion drops out of planning the path. We seek such symbols for robots. A set of symbols is <i>solver-sufficient</i> if fixing any one of them leaves a conditioned problem that a cheap solver can solve, while the best of these solutions remains globally optimal. We invent them from the solver's own failures, for learned policies and contact-rich MILPs alike, without labels, language or predefined predicates.</p>
+      </div>
+    </figcaption>
+  </figure>
+</section>
+
+<!-- ======================= OVERVIEW ======================= -->
+<section class="sec stage" style="padding-top: clamp(16px, 2.6vw, 30px)">
+  <div class="contribs">
+    <a class="contrib rise" href="#results">
+      <h3><span class="qn">Q1</span>Solver-sufficient symbols</h3>
+      <p>A symbol is useful when fixing its value makes the rest of the problem easy: an exact LP for contact-rich MILPs, a single descent for learned energies.</p>
+    </a>
+    <a class="contrib rise" href="#human">
+      <h3><span class="qn">Q2</span>Hardness as commitments</h3>
+      <p>The symbols a task needs mark its irreducible discrete decisions, and they explain which human-defined concepts matter for planning.</p>
+    </a>
+    <a class="contrib rise" href="#steering">
+      <h3><span class="qn">Q3</span>Interpretable and steerable</h3>
+      <p>Invented symbols name behaviours, such as passing an obstacle on the left or the right. Fixing a symbol steers the robot.</p>
+    </a>
+  </div>
+</section>
+
+<!-- ======================= IDEA ======================= -->
+<section class="sec alt" id="idea">
+  <div class="stage">
+    <div class="sec-head">
+      <h2>What makes a symbol good for planning?</h2>
+      <div class="lead-col">
+        <p class="lead">A symbol is good for planning when it is <b>solver-sufficient</b>: every value it can take leaves a conditioned problem that is cheap to solve, and the best of these solutions is the global optimum. A hybrid planner searches over symbol values and then solves the conditioned problem, so the symbol set <span class="m">Ψ</span> sets the cost of both the search and the solve.</p>
+      <div class="eq" role="img" aria-label="Solve of the joint problem equals the minimum over symbol assignments psi of the solve of the conditioned problem">
+        <span class="term"><span class="f">Solve(<i>P</i><span class="ss"><span>&nbsp;</span><span>joint</span></span>)</span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">joint solving</span></span>
+        <span class="op">=</span>
+        <span class="term s"><span class="f"><span class="minop">min<small><i>ψ</i> ∈ <i>Ψ</i></small></span></span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">symbolic search</span></span>
+        <span class="term"><span class="f">Solve(<i>P</i><span class="ss"><i>ψ</i><span>joint</span></span>)</span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">grounded solving</span></span>
+      </div>
+        <p class="lead">Raw mode variables make the search exponential; too few symbols leave the conditioned problem hard.</p>
+      </div>
+    </div>
+
+    <div class="tabs-row"><div class="tabs" role="tablist" aria-label="Instantiation">
+      <button role="tab" id="tab-nn" aria-selected="true" aria-controls="inst-nn">Neural energies</button>
+      <button role="tab" id="tab-pwa" aria-selected="false" aria-controls="inst-pwa">Piecewise-affine systems</button>
+    </div></div>
+    <div class="inst" id="inst-nn" role="tabpanel" aria-labelledby="tab-nn">
+      <div class="text">
+        <h3>Regions where one descent is enough</h3>
+        <div>
+          <p><b>Problem.</b> Minimise a policy energy <span class="m">h<sub>s</sub>(x)</span> over action chunks <span class="m">x</span> in state <span class="m">s</span>, as in diffusion, flow-matching or energy-based policies.</p>
+          <p><b>Symbols.</b> Linear cuts <span class="m">u<sup>⊤</sup>x ≥ b</span>; each symbol value <span class="m">ψ</span> is a region of the action space.</p>
+          <p class="guarantee"><b>τ-descent faithful.</b> From any start inside a region, some path that never climbs more than <span class="m">τ</span> above the lowest energy reached so far leads to within <span class="m">τ</span> of the region's minimum.</p>
+          <p><b>What it buys.</b> Keeping the best of one confined descent per region lands within <span class="m">τ</span> of the global optimum, with no random restarts. In practice the regions coincide with behaviours, such as passing on the left or on the right, so fixing <span class="m">ψ</span> steers the robot.</p>
+        </div>
+      </div>
+      <div class="figcard pptfig" data-svg="fig/nn_method.svg" aria-label="Neural network system: symbol invention and symbol-guided control"><noscript><img src="fig/nn_method.svg" alt="(a) Neural network system: a learned energy has local and global optima; symbol invention finds a symbol basis W whose cuts define regions. (b) Symbol-guided control: one confined descent per region, then the argmin is executed." style="width:100%"></noscript></div>
+    </div>
+    <div class="inst" id="inst-pwa" role="tabpanel" aria-labelledby="tab-pwa" hidden>
+      <div class="text">
+        <h3>Commitments that leave an exact LP</h3>
+        <div>
+          <p><b>Problem.</b> A mixed-integer linear program over binary contact modes <span class="m">z</span> and continuous states and inputs <span class="m">ξ</span>, as for contact-rich manipulation with piecewise-affine dynamics.</p>
+          <p><b>Symbols.</b> A few linear combinations of the modes, <span class="m">ψ = Wz</span>, with a symbol basis <span class="m">W</span>.</p>
+          <p class="guarantee"><b>Relative affine-TU.</b> Once <span class="m">ψ = Wz</span> is fixed, the conditioned constraint matrix is totally unimodular, so its LP relaxation has an integral optimum, which is the optimum of the conditioned MILP.</p>
+          <p><b>What it buys.</b> The search runs over the values of <span class="m">k</span> symbols instead of all mode assignments, each candidate costs one LP, and the remaining binary variables need no branching.</p>
+        </div>
+      </div>
+      <div class="figcard pptfig" data-svg="fig/pwa_method.svg" aria-label="Piecewise affine system: symbol invention and symbol-guided control"><noscript><img src="fig/pwa_method.svg" alt="Piecewise-affine system: a relative affine-TU symbol basis W groups mode assignments so that every conditioned subproblem is an exact LP." style="width:100%"></noscript></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TRY IT ======================= -->
+<section class="sec stage" id="try">
+  <div class="sec-head">
+    <h2 class="with-btn">Pick a region, drop a descent <button class="ghostbtn" id="lab-reset" type="button">Reset</button></h2>
+    <p class="lead">The robot must pass three rows of obstacles. A trained diffusion policy scores every 16-step action chunk with an energy <span class="m">h</span>, and at the start one invented symbol decides the side of the first obstacle. Click a point in either region: a descent confined to that region slides downhill, and the robot executes the chunk it finds, then keeps replanning on its own.</p>
+  </div>
+  <noscript><p>Interactive demo (needs JavaScript). At the start state the energy of a trained diffusion policy has two symbol regions: a descent confined to region ψ = 0 finds a chunk that passes the first obstacle on the left, one in region ψ = 1 passes it on the right; the robot executes the chunk and keeps replanning until the goal line.</p></noscript>
+  <div class="lab" id="lab">
+    <div class="pane" id="land-pane">
+      <canvas id="land-canvas" aria-label="Energy landscape at the start state. Click to start a descent."></canvas>
+      <span class="tag br">Energy <span class="m" style="text-transform:none;letter-spacing:0">h</span> at <span class="m" style="text-transform:none;letter-spacing:0">t = 0</span></span>
+      <div class="readout" id="land-readout"></div>
+    </div>
+    <div class="pane" id="sim-pane">
+      <canvas id="sim-canvas" aria-label="Simulation of the Avoiding task. Drag to rotate."></canvas>
+      <span class="tag">Simulation</span>
+      <span class="hint" id="sim-hint">Drag to rotate</span>
+      <div class="readout" id="sim-readout"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CPR ======================= -->
+<section class="sec alt" id="cpr">
+  <div class="stage">
+    <div class="sec-head">
+      <h2>How are solver-sufficient symbols invented?</h2>
+      <p class="lead">By counterexample-guided partition refinement (CPR). Starting with no symbols, each round verifies the current regions, repairs a failure without a new symbol when it can, and adds a symbol only for a failure that no repair removes. The same loop runs on MILPs, with a total-unimodularity oracle in place of the sampled landscape.</p>
+    </div>
+    <div class="cpr-steps" role="group" aria-label="One round of neural CPR">
+      <button type="button" data-step="0" aria-pressed="true">a · Sample graph</button>
+      <button type="button" data-step="1" aria-pressed="false">b · Verify</button>
+      <button type="button" data-step="2" aria-pressed="false">c · Sparsify</button>
+      <button type="button" data-step="3" aria-pressed="false">d · Split</button>
+    </div>
+    <div class="figcard pptfig cpr-fig" id="cpr-fig" data-svg="fig/cpr_round.svg" aria-label="One round of neural CPR: sample graph, verify, sparsify, split"><noscript><img src="fig/cpr_round.svg" alt="One round of neural CPR: (a) sample graph, (b) verify, (c) sparsify, (d) split." style="width:100%"></noscript></div>
+    <p class="cpr-cap" id="cpr-cap"></p>
+    <noscript><ol class="cpr-noscript"><li><b>Sample graph.</b> Random-start descents on <i>h<sub>s</sub></i> give the graph nodes; edges join consecutive steps and nearest neighbours, scored by the highest energy along them, which is the barrier a descent must climb.</li><li><b>Verify.</b> Flooding the graph from its minima finds basins Φ<sub>1</sub>, Φ<sub>2</sub>, Φ<sub>3</sub>. Leaving Φ<sub>2</sub> or Φ<sub>3</sub> costs more than τ: the region is not faithful.</li><li><b>Sparsify.</b> New descents seeded at the flagged saddle reveal a low path between Φ<sub>1</sub> and Φ<sub>2</sub>: there exists a τ-descent faithful path between them, so Φ<sub>1</sub> ← Φ<sub>1</sub> ∪ Φ<sub>2</sub>, at no symbolic cost.</li><li><b>Split.</b> The remaining barrier is real. A cut through its lowest pass, along the gradient flip, invents one symbol, <i>ψ</i> ∈ {0, 1}.</li></ol></noscript>
+  </div>
+</section>
+
+<!-- ======================= RESULTS ======================= -->
+<section class="sec stage" id="results">
+  <div class="sec-head">
+    <h2><span class="qn">Q1</span>Can solver-sufficient symbols cut computation cost?</h2>
+    <p class="lead">Yes, at similar success rates. On six contact-rich manipulation tasks, three of them dexterous in-hand reorientation, symbol-guided planning runs 1.3–4.8× faster than re-solving the full MILP at every step. On five diffusion-policy tasks, two on a real robot, symbols need 1–2.4 descents to reach a near-optimal plan with 99.9% probability, where random restarts of the same policy need up to 10.3.</p>
+  </div>
+
+  <div class="dex-row" id="dex-row"><noscript><table class="data"><caption>Shadow Hand Block, solve time per episode (sum of per-decision medians over 5 runs, one-time setup excluded)</caption><thead><tr><th>Setting</th><th>Decisions</th><th>Full MILP</th><th>Ours</th></tr></thead><tbody><tr><td>Episode 1</td><td>10</td><td>492 ms</td><td>146 ms</td></tr><tr><td>Episode 2</td><td>12</td><td>334 ms</td><td>192 ms</td></tr><tr><td>Episode 3</td><td>13</td><td>421 ms</td><td>245 ms</td></tr></tbody></table></noscript></div>
+  <p class="dex-sum" id="dex-sum">Dexterous in-hand cube reorientation with a Shadow Hand, three task settings. Both solvers take the same steps to the goal; each row moves one step per decision its solver returns, so playback time is proportional to solve time (one-time model setup not counted). Below, we quantify this speed-up across all tasks and baselines.</p>
+
+  <div class="res-grid">
+    <div class="res-card">
+      <h3>Piecewise-affine tasks</h3><p class="sub">Success rate vs. speed-up over re-solving the full MILP at every step (log scale). Up and right is better.</p>
+      <div class="seg" id="pwa-task" role="group" aria-label="Task"></div>
+      <div class="chart" id="pwa-chart"></div>
+      <div class="legend" id="pwa-legend"></div>
+    </div>
+    <div class="res-card">
+      <h3>Neural-policy tasks</h3><p class="sub">Descents needed to reach a near-optimal plan (within <span class="m">τ</span>) with 99.9% probability, log scale. Lower is better.</p>
+      <div class="seg" id="nn-task" role="group" aria-label="Task"></div>
+      <div class="chart" id="nn-chart"></div>
+      <div class="legend" id="nn-legend"></div>
+    </div>
+  </div>
+
+  <details class="full" open>
+    <summary>Full tables</summary>
+    <div class="tablewrap" id="table1"><table class="data"><caption style="text-align:left;font-family:var(--font-ui);color:var(--ink-2);padding:6px 0">Piecewise-affine (MILP) tasks: success rate / speed-up over re-solving the full MILP at every step (full MILP = 1.00×)</caption><thead><tr><th>Method</th><th>MPushT</th><th>Hook</th><th>Packing</th><th>Block</th><th>Cuboid</th><th>Pen</th></tr></thead><tbody><tr class=""><td>CoCo</td><td>0.75 / 3.57×</td><td>0.63 / 3.18×</td><td>0.75 / 1.39×</td><td>0.69 / 2.70×</td><td>0.81 / 1.61×</td><td>0.75 / 1.28×</td></tr><tr class=""><td>GBD-MPC</td><td>0.94 / 0.12×</td><td>0.94 / 0.06×</td><td>0.81 / 0.09×</td><td>0.94 / 0.32×</td><td>0.88 / 0.21×</td><td>0.88 / 0.06×</td></tr><tr class=""><td>PDDLStream</td><td>0.88 / 0.77×</td><td>0.81 / 0.36×</td><td>0.69 / 0.42×</td><td>0.81 / 0.67×</td><td>0.81 / 0.38×</td><td>0.75 / 0.17×</td></tr><tr class=""><td>PGS</td><td>0.81 / 0.08×</td><td>0.69 / 0.37×</td><td>0.75 / 0.16×</td><td>0.75 / 0.15×</td><td>0.69 / 0.13×</td><td>0.81 / 0.04×</td></tr><tr class=""><td>IVNTR</td><td>0.88 / 0.15×</td><td>0.81 / 0.22×</td><td>0.75 / 0.12×</td><td>0.94 / 0.10×</td><td>0.75 / 0.10×</td><td>0.81 / 0.03×</td></tr><tr class=""><td>pix2pred</td><td>0.88 / 0.03×</td><td>0.88 / 0.09×</td><td>0.94 / 0.08×</td><td>0.94 / 0.05×</td><td>0.88 / 0.04×</td><td>0.75 / 0.01×</td></tr><tr class="ours"><td>Ours</td><td>1.00 / 4.81×</td><td>1.00 / 3.07×</td><td>0.94 / 2.77×</td><td>0.88 / 1.53×</td><td>0.94 / 1.34×</td><td>0.88 / 1.94×</td></tr></tbody></table></div>
+    <div class="tablewrap" id="table2"><table class="data"><caption style="text-align:left;font-family:var(--font-ui);color:var(--ink-2);padding:6px 0">Neural-policy tasks: success rate / descents needed to reach a near-optimal plan with 99.9% probability</caption><thead><tr><th>Method</th><th>Avoiding</th><th>Pushing</th><th>Aligning</th><th>Sorting (real)</th><th>Matching (real)</th></tr></thead><tbody><tr class=""><td>DDPM</td><td>1.00 / 7.03</td><td>0.90 / 1.00</td><td>0.94 / 10.31</td><td>0.75 / 5.15</td><td>0.88 / 1.68</td></tr><tr class=""><td>ACT</td><td>0.91 / 833.69</td><td>0.91 / 5.93</td><td>0.91 / 9.25</td><td>0.69 / 173.45</td><td>0.63 / 259.67</td></tr><tr class=""><td>BESO</td><td>0.97 / 329.03</td><td>0.63 / 198.57</td><td>0.75 / 338.03</td><td>0.75 / 87.48</td><td>0.69 / 147.85</td></tr><tr class=""><td>IBC</td><td>0.81 / 690.34</td><td>0.63 / 312.70</td><td>0.63 / 349.94</td><td>0.63 / 340.78</td><td>0.69 / 562.95</td></tr><tr class=""><td>BeT</td><td>0.72 / 495.50</td><td>0.30 / 105.63</td><td>0.53 / 94.66</td><td>0.56 / 936.83</td><td>0.75 / 1325.94</td></tr><tr class="ours"><td>DDPM + symbols</td><td>1.00 / 2.00</td><td>0.91 / 1.00</td><td>0.84 / 2.41</td><td>0.75 / 1.20</td><td>0.88 / 1.00</td></tr></tbody></table></div>
+  </details>
+</section>
+
+<!-- ======================= HUMAN SYMBOLS ======================= -->
+<section class="sec alt" id="human">
+  <div class="stage">
+    <div class="sec-head">
+      <h2><span class="qn">Q2</span>Can solver-sufficient symbols explain human-defined concepts?</h2>
+      <p class="lead">Largely. We scored 127 human-defined binary factors, from nine MILP formulations of a four-pusher Push-T task, on two axes: <b>solver necessity</b>, how often our symbols pin the factor down, and <b>task necessity</b>, how much success drops without it. Factors that our symbols always pin down matter 6.5× more to the task than those pinned down less than half the time (7.2 vs 1.1).</p>
+    </div>
+    <div class="hs">
+      <div class="chart" id="tnsn-chart"><noscript><table class="data"><caption>Push-T factors grouped by solver necessity (SN): average task necessity (TN) and share of factors. The push at a corner of the bar (z1) falls in SN [0, 0.5); the push at the bottom of the stem (z2) has SN = 1.0.</caption><thead><tr><th>SN</th><th>TN</th><th>Share of factors</th></tr></thead><tbody><tr><td>[0, 0.5)</td><td>1.1</td><td>12%</td></tr><tr><td>[0.5, 1)</td><td>4.1</td><td>42%</td></tr><tr><td>1.0</td><td>7.2</td><td>46%</td></tr></tbody></table></noscript></div>
+      <div class="hs-text">
+        <p>The two rise together: the factors that the solver cannot relax away are the ones the task needs. A push at the bottom of the stem (<span class="m">z</span><sub>2</sub>) cannot be replaced, while a push at a corner of the bar (<span class="m">z</span><sub>1</sub>) can be taken over by its neighbours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= STEERING ======================= -->
+<section class="sec stage" id="steering">
+  <div class="sec-head">
+    <h2><span class="qn">Q3</span>Can solver-sufficient symbols be interpreted and steered?</h2>
+    <p class="lead">Yes. Each invented symbol names a behaviour, and fixing its value selects it. In simulation, 94–100% of successful runs pass the first obstacle on the side that the symbol fixes; on a real robot, the symbol decides which block is sorted first.</p>
+  </div>
+  <div class="tabs-row"><div class="tabs" role="tablist" aria-label="Steering task">
+    <button role="tab" id="st-sorting" aria-selected="true">Sorting</button>
+    <button role="tab" id="st-avoiding" aria-selected="false">Avoiding</button>
+    <button role="tab" id="st-aligning" aria-selected="false">Aligning</button>
+  </div></div>
+  <div class="players" id="players"><noscript><ul>
+    <li>Sorting, real robot: ψ = 0 puts the red block away first; ψ = 1 puts the blue block away first.</li>
+    <li>Avoiding: ψ = 0 passes the first obstacle on the left; ψ = 1 passes it on the right.</li>
+    <li>Aligning: ψ = 0 descends early and pushes the box from outside; ψ = 1 keeps height and pushes from inside.</li>
+  </ul></noscript></div>
+</section>
+
+</main>
+
+
+<script src="js/util.js"></script>
+<script src="js/landscape.js"></script>
+<script src="js/hero.js"></script>
+<script src="js/sim3d.js"></script>
+<script src="js/lab.js"></script>
+<script src="js/figures.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/dex.js"></script>
+<script src="js/steer.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
