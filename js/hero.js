@@ -211,6 +211,8 @@
     const phaseEl = document.getElementById('hero-phase'), hitsEl = document.getElementById('hero-hits');
     if (hitsEl) hitsEl.textContent = String(hits);
     const setPhase = html => { if (phaseEl.innerHTML !== html) phaseEl.innerHTML = html; };
+    const eqEl = document.querySelector('.hero-eq');
+    const setActive = k => { if (eqEl && eqEl.dataset.active !== k) eqEl.dataset.active = k; };   // highlight the formula term being shown
     const T = { b0: 5.2, c0: 8.0, c1: 11.2, end: 15.0 };
     let t0 = performance.now(), visible = true, raf = null, lastT = 0;
 
@@ -250,10 +252,10 @@
         ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.stroke(); ctx.strokeStyle = '#14171d'; ctx.lineWidth = 1.8; ctx.stroke(); ctx.restore();
       }
       // status line under the map
-      if (t < T.b0) { setPhase(`<b>Random restarts</b><span>${hits} of ${R} reach the optimum</span>`); }
-      else if (t < T.c0) setPhase(`<b>Invent symbols</b><span>two cuts through the passes make ${M.regions.length} regions</span>`);
+      if (t < T.b0) { setActive('joint'); setPhase(`<b>Joint solving</b><span>${hits} of ${R} random restarts reach the optimum</span>`); }
+      else if (t < T.c0) { setActive('search'); setPhase(`<b>Symbolic search</b><span>two cuts through the passes make ${M.regions.length} symbols, one per region</span>`); }
       else {
-        setPhase(`<b>One descent per region</b><span>the lowest floor, in ${M.per[win].reg.name}, is the optimum</span>`);
+        setActive('grounded'); setPhase(`<b>Grounded solving</b><span>one descent per region; the lowest floor, in ${M.per[win].reg.name}, is the optimum</span>`);
       }
     }
     resize(); window.addEventListener('resize', () => { resize(); if (!raf) draw(lastT); });

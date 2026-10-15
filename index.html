@@ -107,16 +107,30 @@ p { margin: 0; text-wrap: pretty; }
 .btn .soon { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); border-left: 1px solid var(--rule); padding-left: 8px; }
 .btn[aria-disabled="true"] { cursor: default; }
 .hero-fig { margin: clamp(22px, 3vw, 32px) 0 0; }
-.hero-canvas-wrap { position: relative; border-radius: 12px; overflow: hidden; background: var(--bg-alt); aspect-ratio: 2 / 1; max-width: 100%; box-shadow: var(--shadow); }
+.eq.hero-eq { margin: 0; justify-content: flex-end; font-size: clamp(1.05rem, 1.8vw, 1.32rem); }
+/* the formula term that the animation is showing is highlighted (js/hero.js sets data-active) */
+.hero-eq .brace path { transition: stroke .35s ease; }
+.hero-eq .lbl, .hero-eq .f { transition: color .35s ease; }
+.hero-eq[data-active] .term .brace path { stroke: var(--ink-3); }
+.hero-eq[data-active] .term .lbl { color: var(--ink-3); font-weight: 400; }
+.hero-eq[data-active="joint"] [data-k="joint"] .brace path, .hero-eq[data-active="search"] [data-k="search"] .brace path, .hero-eq[data-active="grounded"] [data-k="grounded"] .brace path { stroke: var(--sym); stroke-width: 1.8; }
+.hero-eq[data-active="joint"] [data-k="joint"] .lbl, .hero-eq[data-active="search"] [data-k="search"] .lbl, .hero-eq[data-active="grounded"] [data-k="grounded"] .lbl { color: var(--sym); font-weight: 700; }
+.hero-eq[data-active="joint"] [data-k="joint"] .f, .hero-eq[data-active="search"] [data-k="search"] .f, .hero-eq[data-active="grounded"] [data-k="grounded"] .f { color: var(--sym); }
+.hero-card { display: grid; gap: clamp(10px, 1.4vw, 14px); }
+.hero-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px 32px; padding: clamp(14px, 2vw, 20px) clamp(16px, 2.6vw, 26px); border-radius: 12px; background: var(--bg-alt); }
+.hero-head .thesis { margin: 0; font-size: clamp(1.12rem, 1.9vw, 1.36rem); }
+.hero-canvas-wrap { position: relative; overflow: hidden; border-radius: 12px; box-shadow: var(--shadow); background: var(--bg-alt); aspect-ratio: 2 / 1; max-width: 100%; }
+@media (max-width: 760px) { .hero-head { grid-template-columns: 1fr; gap: 12px; } .eq.hero-eq { justify-content: center; flex-wrap: nowrap; gap: 0 .35em; font-size: 1rem; } }
 .hero-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
 .hero-bar { margin-top: 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 18px; font-family: var(--font-ui); font-size: .95rem; color: var(--ink-2); }
 .phase { display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: baseline; min-height: 1.5em; }
 .phase b { color: var(--ink); font-weight: 700; }
+.phase b { color: var(--sym); }
 .hero-meta { display: flex; align-items: center; gap: 16px; }
 .hero-cbar { display: inline-flex; align-items: center; gap: 6px; font-size: .84rem; white-space: nowrap; }
 .hero-cbar i { display: block; width: 84px; height: 7px; border-radius: 4px; background: linear-gradient(90deg, #3b4cc0, #8db0fe, #dddcdb, #f49a7b, #b40426); }
 .hero-replay { font-family: var(--font-ui); font-size: .88rem; border: 1px solid var(--rule); background: var(--bg); color: var(--ink-2); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
-.thesis { margin-top: clamp(16px, 2.4vw, 22px); font-size: clamp(1.15rem, 1.9vw, 1.4rem); line-height: 1.3; font-style: italic; }
+.thesis { margin-top: clamp(24px, 3.4vw, 34px); font-size: clamp(1.15rem, 1.9vw, 1.4rem); line-height: 1.3; font-style: italic; }
 .thesis em { font-style: normal; color: var(--sym); }
 .story { margin-top: 14px; display: grid; gap: 10px; color: var(--ink-2); text-align: justify; hyphens: none; }
 .story b { color: var(--ink); }
@@ -323,22 +337,32 @@ table.data td { color: var(--ink-2); }
     <a class="btn" aria-disabled="true" role="link" tabindex="0" title="Coming soon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5.5 4L2 8l3.5 4M10.5 4L14 8l-3.5 4"/></svg>Code<span class="soon">soon</span></a>
   </div>
   <figure class="hero-fig">
-    <div class="hero-canvas-wrap">
-      <canvas id="hero-canvas" aria-label="Animated energy landscape: 24 random restarts settle in different basins and only 2 reach the lowest one; two cuts split the landscape into three regions; one descent per region finds the optimum."></canvas>
-      <noscript><img src="media/hero.jpg" width="1720" height="860" alt="Toy energy landscape split by two cuts into three regions R1, R2, R3, with one descent per region; the lowest floor, in R3, is the optimum." style="width:100%;height:100%;object-fit:cover"></noscript>
+    <div class="hero-card">
+      <div class="hero-head">
+        <p class="thesis">A good symbol is a commitment that leaves an <em>easy</em> problem behind.</p>
+        <div class="eq hero-eq" role="img" aria-label="Solve of the joint problem equals the minimum over symbol assignments psi of the solve of the conditioned problem">
+          <span class="term" data-k="joint"><span class="f">Solve(<i>P</i><span class="ss"><span>&nbsp;</span><span>joint</span></span>)</span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">joint solving</span></span>
+          <span class="op">=</span>
+          <span class="term s" data-k="search"><span class="f"><span class="minop">min<small><i>ψ</i> ∈ <i>Ψ</i></small></span></span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">symbolic search</span></span>
+          <span class="term" data-k="grounded"><span class="f">Solve(<i>P</i><span class="ss"><i>ψ</i><span>joint</span></span>)</span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">grounded solving</span></span>
+        </div>
+      </div>
+      <div class="hero-canvas-wrap">
+        <canvas id="hero-canvas" aria-label="Animated energy landscape: 24 random restarts settle in different basins and only 2 reach the lowest one; two cuts split the landscape into three regions; one descent per region finds the optimum."></canvas>
+        <noscript><img src="media/hero.jpg" width="1720" height="860" alt="Toy energy landscape split by two cuts into three regions R1, R2, R3, with one descent per region; the lowest floor, in R3, is the optimum." style="width:100%;height:100%;object-fit:cover"></noscript>
+      </div>
     </div>
     <div class="hero-bar">
-      <div class="phase" id="hero-phase" aria-live="polite"><b>Random restarts</b><span>descents land in different basins</span></div>
+      <div class="phase" id="hero-phase" aria-live="polite"><b>Joint solving</b><span>random restarts land in different basins</span></div>
       <div class="hero-meta">
         <span class="hero-cbar">low <span class="m">h</span><i></i>high</span>
         <button class="hero-replay" id="hero-replay" type="button">Replay</button>
       </div>
     </div>
     <figcaption>
-      <p class="thesis">A good symbol is a commitment that leaves an <em>easy</em> problem behind.</p>
       <div class="story">
-        <p><b>Learned policies hide their discrete choices.</b> Diffusion, flow-matching and energy-based policies can be read as minimising a learned energy <span class="m">h</span> over action sequences. Its basins encode distinct behaviours, such as passing an obstacle on the left or right, but none is exposed as a variable: which basin a sample reaches depends on its initial noise, so inference-time search needs many samples (in the map above, <span id="hero-hits">2</span> of 24 restarts reach the lowest basin) and can neither guarantee the best behaviour nor select one.</p>
-        <p><b>Solver-sufficient symbols make these choices explicit.</b> In resource-rational accounts from cognitive science, a useful symbol exposes a key commitment and abstracts details away, so that planning fits a bounded budget. To walk to the office with a bag, a person must at first plan their own motion and the bag's jointly; once “the bag is being carried” is settled, the bag's motion drops out of planning the path. We seek such symbols for robots. A set of symbols is <i>solver-sufficient</i> if fixing any one of them leaves a conditioned problem that a cheap solver can solve, while the best of these solutions remains globally optimal. We invent them from the solver's own failures, for learned policies and contact-rich MILPs alike, without labels, language or predefined predicates.</p>
+        <p><b>Learned policies hide their discrete choices.</b> Diffusion, flow-matching and energy-based policies can be read as minimising a learned energy <span class="m">h</span> over action sequences, solving the whole problem jointly. The basins of <span class="m">h</span> encode distinct behaviours, such as passing an obstacle on the left or right, but none is exposed as a variable: which basin a sample reaches depends on its initial noise. Joint solving therefore needs many samples (above, <span id="hero-hits">2</span> of 24 restarts reach the lowest basin) and can neither reliably guarantee the best behaviour nor let a user select the behaviour they want.</p>
+        <p><b>Solver-sufficient symbols make these choices explicit.</b> A set of symbols <span class="m">Ψ</span> is solver-sufficient if the grounded solve under every symbol <span class="m">ψ</span> is cheap and the best of these solutions is still the global optimum. In the map, each symbol is a region in which a single descent reaches the region's lowest point: three descents replace dozens of restarts, and fixing a symbol commits the robot to a behaviour. We invent such symbols automatically from the solver's own failures, for learned policies and contact-rich MILPs alike, without labels, language or predefined predicates.</p>
       </div>
     </figcaption>
   </figure>
@@ -349,7 +373,7 @@ table.data td { color: var(--ink-2); }
   <div class="contribs">
     <a class="contrib rise" href="#results">
       <h3><span class="qn">Q1</span>Solver-sufficient symbols</h3>
-      <p>A symbol is useful when fixing its value makes the rest of the problem easy: an exact LP for contact-rich MILPs, a single descent for learned energies.</p>
+      <p>Fixing a symbol leaves an easy problem, an exact LP for contact-rich MILPs or a single descent for learned energies, so planning gets cheaper without losing solution quality.</p>
     </a>
     <a class="contrib rise" href="#human">
       <h3><span class="qn">Q2</span>Hardness as commitments</h3>
@@ -366,16 +390,9 @@ table.data td { color: var(--ink-2); }
 <section class="sec alt" id="idea">
   <div class="stage">
     <div class="sec-head">
-      <h2>What makes a symbol good for planning?</h2>
+      <h2>What makes a symbol solver-sufficient?</h2>
       <div class="lead-col">
-        <p class="lead">A symbol is good for planning when it is <b>solver-sufficient</b>: every value it can take leaves a conditioned problem that is cheap to solve, and the best of these solutions is the global optimum. A hybrid planner searches over symbol values and then solves the conditioned problem, so the symbol set <span class="m">Ψ</span> sets the cost of both the search and the solve.</p>
-      <div class="eq" role="img" aria-label="Solve of the joint problem equals the minimum over symbol assignments psi of the solve of the conditioned problem">
-        <span class="term"><span class="f">Solve(<i>P</i><span class="ss"><span>&nbsp;</span><span>joint</span></span>)</span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">joint solving</span></span>
-        <span class="op">=</span>
-        <span class="term s"><span class="f"><span class="minop">min<small><i>ψ</i> ∈ <i>Ψ</i></small></span></span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">symbolic search</span></span>
-        <span class="term"><span class="f">Solve(<i>P</i><span class="ss"><i>ψ</i><span>joint</span></span>)</span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">grounded solving</span></span>
-      </div>
-        <p class="lead">Raw mode variables make the search exponential; too few symbols leave the conditioned problem hard.</p>
+        <p class="lead">Symbols trade search against solving. Too many, such as raw mode variables, make the symbolic search exponential; too few leave the grounded solve hard. Solver-sufficient symbols add commitments only until the grounded solve becomes cheap, and what “cheap” means depends on the solver: a single descent for a learned energy, a single linear program for a contact-rich MILP.</p>
       </div>
     </div>
 
@@ -493,7 +510,7 @@ table.data td { color: var(--ink-2); }
     <div class="hs">
       <div class="chart" id="tnsn-chart"><noscript><table class="data"><caption>Push-T factors grouped by solver necessity (SN): average task necessity (TN) and share of factors. The push at a corner of the bar (z1) falls in SN [0, 0.5); the push at the bottom of the stem (z2) has SN = 1.0.</caption><thead><tr><th>SN</th><th>TN</th><th>Share of factors</th></tr></thead><tbody><tr><td>[0, 0.5)</td><td>1.1</td><td>12%</td></tr><tr><td>[0.5, 1)</td><td>4.1</td><td>42%</td></tr><tr><td>1.0</td><td>7.2</td><td>46%</td></tr></tbody></table></noscript></div>
       <div class="hs-text">
-        <p>The two rise together: the factors that the solver cannot relax away are the ones the task needs. A push at the bottom of the stem (<span class="m">z</span><sub>2</sub>) cannot be replaced, while a push at a corner of the bar (<span class="m">z</span><sub>1</sub>) can be taken over by its neighbours.</p>
+        <p>A factor that the solver cannot relax away encodes a real discrete decision, so the task cannot do without it. A push at the bottom of the stem (<span class="m">z</span><sub>2</sub>) cannot be replaced, while a push at a corner of the bar (<span class="m">z</span><sub>1</sub>) can be taken over by its neighbouring pushes.</p>
       </div>
     </div>
   </div>
