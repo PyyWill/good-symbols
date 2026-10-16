@@ -7,7 +7,7 @@
 <link rel="canonical" href="https://pyywill.github.io/good-symbols/">
 <meta property="og:url" content="https://pyywill.github.io/good-symbols/">
 <title>What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?</title>
-<meta name="description" content="A symbol is useful for hybrid discrete–continuous planning when fixing it preserves the optimum and leaves a problem that is easy to solve: an exact linear program for piecewise-affine MILPs, a single descent for diffusion and energy-based policies. Counterexample-guided partition refinement (CPR) invents such solver-sufficient symbols.">
+<meta name="description" content="What makes a symbol good for planning? View planning as trajectory optimization, then decompose the continuous search into symbolic regions. Good symbols make the remaining subproblems easy to solve while preserving solution quality.">
 <meta name="keywords" content="hybrid discrete-continuous planning, symbol invention, solver-sufficient symbols, counterexample-guided partition refinement, mixed-integer linear programming, piecewise-affine systems, total unimodularity, diffusion policy, energy-based policy, contact-rich manipulation, task and motion planning, behavior steering">
 <meta name="citation_title" content="What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?">
 <meta name="citation_author" content="Yiyuan Pan">
@@ -19,13 +19,13 @@
 <meta name="citation_publication_date" content="2026">
 <meta property="og:type" content="article">
 <meta property="og:title" content="What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?">
-<meta property="og:description" content="A symbol is useful for hybrid discrete–continuous planning when fixing it preserves the optimum and leaves a problem that is easy to solve: an exact linear program for piecewise-affine MILPs, a single descent for diffusion and energy-based policies. Counterexample-guided partition refinement (CPR) invents such solver-sufficient symbols.">
+<meta property="og:description" content="What makes a symbol good for planning? View planning as trajectory optimization, then decompose the continuous search into symbolic regions. Good symbols make the remaining subproblems easy to solve while preserving solution quality.">
 <meta property="og:image" content="https://pyywill.github.io/good-symbols/media/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?">
-<meta name="twitter:description" content="A symbol is useful for hybrid discrete–continuous planning when fixing it preserves the optimum and leaves a problem that is easy to solve: an exact linear program for piecewise-affine MILPs, a single descent for diffusion and energy-based policies. Counterexample-guided partition refinement (CPR) invents such solver-sufficient symbols.">
+<meta name="twitter:description" content="What makes a symbol good for planning? View planning as trajectory optimization, then decompose the continuous search into symbolic regions. Good symbols make the remaining subproblems easy to solve while preserving solution quality.">
 <meta name="twitter:image" content="https://pyywill.github.io/good-symbols/media/og.jpg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ScholarlyArticle", "headline": "What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?", "name": "What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?", "abstract": "The physical world has continuous state and action spaces, yet robot planning often benefits from hybrid discrete-continuous formulations that explicitly expose combinatorial structure, such as contact modes or discrete primitive actions. Existing methods typically rely on human-defined symbol sets or symbols derived from language supervision, without asking what makes a symbol computationally useful. In this paper, we take an inference-algorithm-centric view to define usefulness: a good symbol should expose the discrete commitments that simplify solving the original planning problem. We first introduce the concept of solver-sufficient symbolization by studying finite-horizon piecewise-affine systems, for which solver sufficiency can be precisely characterized, and develop a counterexample-guided algorithm for symbol invention. We then extend this principle to invent symbols for optimization objectives parameterized by general neural networks as energy functions, showing that solver-sufficient symbols can nevertheless be induced from their continuous optimization landscapes. Experiments on simulated and real-robot tasks show that the resulting symbols reduce solving cost while preserving solution quality, while also improving interpretability and steerability. Furthermore, our theoretical and algorithmic insights help explain why certain human-defined symbols are computationally useful.", "description": "A symbol is useful for hybrid discrete–continuous planning when fixing it preserves the optimum and leaves a problem that is easy to solve: an exact linear program for piecewise-affine MILPs, a single descent for diffusion and energy-based policies. Counterexample-guided partition refinement (CPR) invents such solver-sufficient symbols.", "keywords": ["hybrid discrete-continuous planning", "symbol invention", "solver-sufficient symbols", "counterexample-guided partition refinement", "mixed-integer linear programming", "piecewise-affine systems", "total unimodularity", "diffusion policy", "energy-based policy", "contact-rich manipulation", "task and motion planning", "behavior steering"], "inLanguage": "en", "datePublished": "2026", "author": [{"@type": "Person", "name": "Yiyuan Pan", "affiliation": {"@type": "Organization", "name": "Carnegie Mellon University"}}, {"@type": "Person", "name": "Changliu Liu", "affiliation": {"@type": "Organization", "name": "Carnegie Mellon University"}}, {"@type": "Person", "name": "Jiayuan Mao", "affiliation": {"@type": "Organization", "name": "University of Pennsylvania"}}], "image": "https://pyywill.github.io/good-symbols/media/og.jpg", "url": "https://pyywill.github.io/good-symbols/"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ScholarlyArticle", "headline": "What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?", "name": "What Makes a Good Symbol for Hybrid Discrete–Continuous Planning?", "abstract": "The physical world has continuous state and action spaces, yet robot planning often benefits from hybrid discrete-continuous formulations that explicitly expose combinatorial structure, such as contact modes or discrete primitive actions. Existing methods typically rely on human-defined symbol sets or symbols derived from language supervision, without asking what makes a symbol computationally useful. In this paper, we take an inference-algorithm-centric view to define usefulness: a good symbol should expose the discrete commitments that simplify solving the original planning problem. We first introduce the concept of solver-sufficient symbolization by studying finite-horizon piecewise-affine systems, for which solver sufficiency can be precisely characterized, and develop a counterexample-guided algorithm for symbol invention. We then extend this principle to invent symbols for optimization objectives parameterized by general neural networks as energy functions, showing that solver-sufficient symbols can nevertheless be induced from their continuous optimization landscapes. Experiments on simulated and real-robot tasks show that the resulting symbols reduce solving cost while preserving solution quality, while also improving interpretability and steerability. Furthermore, our theoretical and algorithmic insights help explain why certain human-defined symbols are computationally useful.", "description": "What makes a symbol good for planning? View planning as trajectory optimization, then decompose the continuous search into symbolic regions. Good symbols make the remaining subproblems easy to solve while preserving solution quality.", "keywords": ["hybrid discrete-continuous planning", "symbol invention", "solver-sufficient symbols", "counterexample-guided partition refinement", "mixed-integer linear programming", "piecewise-affine systems", "total unimodularity", "diffusion policy", "energy-based policy", "contact-rich manipulation", "task and motion planning", "behavior steering"], "inLanguage": "en", "datePublished": "2026", "author": [{"@type": "Person", "name": "Yiyuan Pan", "affiliation": {"@type": "Organization", "name": "Carnegie Mellon University"}}, {"@type": "Person", "name": "Changliu Liu", "affiliation": {"@type": "Organization", "name": "Carnegie Mellon University"}}, {"@type": "Person", "name": "Jiayuan Mao", "affiliation": {"@type": "Organization", "name": "University of Pennsylvania"}}], "image": "https://pyywill.github.io/good-symbols/media/og.jpg", "url": "https://pyywill.github.io/good-symbols/"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="data/hero_model.json" as="fetch" crossorigin>
@@ -106,6 +106,9 @@ p { margin: 0; text-wrap: pretty; }
 .btn svg { width: 16px; height: 16px; flex: none; }
 .btn .soon { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); border-left: 1px solid var(--rule); padding-left: 8px; }
 .btn[aria-disabled="true"] { cursor: default; }
+.hero-intro { margin-top: clamp(26px, 3.6vw, 38px); display: grid; gap: 14px; color: var(--ink-2); }
+.hero-intro b { color: var(--ink); }
+.hero-intro .question { font-size: 1.2rem; color: var(--ink); }
 .hero-fig { margin: clamp(22px, 3vw, 32px) 0 0; }
 .eq.hero-eq { margin: 0; justify-content: flex-end; font-size: clamp(1.05rem, 1.8vw, 1.32rem); }
 /* the formula term that the animation is showing is highlighted (js/hero.js sets data-active) */
@@ -336,15 +339,21 @@ table.data td { color: var(--ink-2); }
     <a class="btn" aria-disabled="true" role="link" tabindex="0" title="Coming soon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 2.5l10 11M13 2.5l-10 11"/></svg>arXiv<span class="soon">soon</span></a>
     <a class="btn" aria-disabled="true" role="link" tabindex="0" title="Coming soon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5.5 4L2 8l3.5 4M10.5 4L14 8l-3.5 4"/></svg>Code<span class="soon">soon</span></a>
   </div>
+  <div class="hero-intro">
+    <p>The physical world has continuous state and action spaces, yet planning often benefits from hybrid discrete–continuous formulations that expose combinatorial structure: contact modes such as fixed and sliding contacts, or symbolic relations such as <span class="m">holding</span> and <span class="m">in</span>. These symbols give a planner discrete choices to reason about.</p>
+    <p class="question"><b>But what makes a symbol good for planning?</b></p>
+    <p>To build intuition, consider a finite-horizon decision-making problem in continuous space. With deterministic dynamics, we can write it as trajectory optimization: <span class="m">x</span> collects the states and actions over the horizon, and an energy <span class="m">E(x)</span> gives their total cost, with infeasible trajectories assigned infinite energy. Planning means finding a feasible trajectory with the lowest energy.</p>
+    <p>One way to tackle this global search is to <b>decompose the trajectory space into regions</b>. A discrete symbol assignment <span class="m">ψ</span> selects a region <span class="m">X<sub>ψ</sub></span>—for example, trajectories that pass an obstacle on the left. The planner searches over these discrete choices and solves a continuous optimization problem within each region.</p>
+  </div>
   <figure class="hero-fig">
     <div class="hero-card">
       <div class="hero-head">
-        <p class="thesis">A good symbol is a commitment that leaves an <em>easy</em> problem behind.</p>
-        <div class="eq hero-eq" role="img" aria-label="Solve of the joint problem equals the minimum over symbol assignments psi of the solve of the conditioned problem">
-          <span class="term" data-k="joint"><span class="f">Solve(<i>P</i><span class="ss"><span>&nbsp;</span><span>joint</span></span>)</span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">joint solving</span></span>
+        <p class="thesis">A good symbol makes the remaining continuous problem <em>easy to solve</em>.</p>
+        <div class="eq hero-eq" role="img" aria-label="The minimum trajectory energy over X equals the minimum over symbol assignments psi of the minimum energy within region X psi">
+          <span class="term" data-k="joint"><span class="f"><span class="minop">min<small><i>x</i> ∈ <i>X</i></small></span>&nbsp;<i>E</i>(<i>x</i>)</span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">continuous search</span></span>
           <span class="op">=</span>
           <span class="term s" data-k="search"><span class="f"><span class="minop">min<small><i>ψ</i> ∈ <i>Ψ</i></small></span></span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">symbolic search</span></span>
-          <span class="term" data-k="grounded"><span class="f">Solve(<i>P</i><span class="ss"><i>ψ</i><span>joint</span></span>)</span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">grounded solving</span></span>
+          <span class="term" data-k="grounded"><span class="f"><span class="minop">min<small><i>x</i> ∈ <i>X</i><sub>ψ</sub></small></span>&nbsp;<i>E</i>(<i>x</i>)</span><svg class="brace" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1 1 Q1 6 6 6 H44 Q49 6 50 11 Q51 6 56 6 H94 Q99 6 99 1"/></svg><span class="lbl">solve within a region</span></span>
         </div>
       </div>
       <div class="hero-canvas-wrap">
@@ -353,16 +362,17 @@ table.data td { color: var(--ink-2); }
       </div>
     </div>
     <div class="hero-bar">
-      <div class="phase" id="hero-phase" aria-live="polite"><b>Joint solving</b><span>random restarts land in different basins</span></div>
+      <div class="phase" id="hero-phase" aria-live="polite"><b>Continuous search</b><span>random restarts land in different basins</span></div>
       <div class="hero-meta">
-        <span class="hero-cbar">low <span class="m">h</span><i></i>high</span>
+        <span class="hero-cbar">low <span class="m">E</span><i></i>high</span>
         <button class="hero-replay" id="hero-replay" type="button">Replay</button>
       </div>
     </div>
     <figcaption>
       <div class="story">
-        <p><b>Learned policies hide their discrete choices.</b> Diffusion, flow-matching and energy-based policies can be read as minimising a learned energy <span class="m">h</span> over action sequences, solving the whole problem jointly. The basins of <span class="m">h</span> encode distinct behaviours, such as passing an obstacle on the left or right, but none is exposed as a variable: which basin a sample reaches depends on its initial noise. Joint solving therefore needs many samples (above, <span id="hero-hits">2</span> of 24 restarts reach the lowest basin) and can neither reliably guarantee the best behaviour nor let a user select the behaviour they want.</p>
-        <p><b>Solver-sufficient symbols make these choices explicit.</b> A set of symbols <span class="m">Ψ</span> is solver-sufficient if the grounded solve under every symbol <span class="m">ψ</span> is cheap and the best of these solutions is still the global optimum. In the map, each symbol is a region in which a single descent reaches the region's lowest point: three descents replace dozens of restarts, and fixing a symbol commits the robot to a behaviour. We invent such symbols automatically from the solver's own failures, for learned policies and contact-rich MILPs alike, without labels, language or predefined predicates.</p>
+        <p><b>A decomposition preserves the problem; a good decomposition simplifies it.</b> If the regions cover the feasible trajectory space <span class="m">X</span>, the equality above holds. But an arbitrary partition can still leave difficult optimization problems inside its regions, or create so many regions that discrete search becomes expensive. A useful symbol exposes the choices that make the remaining solve easier.</p>
+        <p><b>The landscape illustrates the difference.</b> Each point represents a candidate trajectory, and its colour represents energy <span class="m">E(x)</span>. Without the partition, only <span id="hero-hits">2</span> of 24 random restarts reach the lowest basin in this example. Two cuts divide the landscape into three regions; one confined descent per region finds three candidate solutions, and the best recovers the optimum.</p>
+        <p><b>We call this solver sufficiency.</b> Symbols are useful relative to a solver: fixing their values should leave a subproblem that the solver can handle cheaply, while comparing the regional solutions preserves solution quality. We study this principle in piecewise-affine planning and learned neural energies, and invent symbols automatically by refining a partition when the solver reveals a failure.</p>
       </div>
     </figcaption>
   </figure>
@@ -373,10 +383,10 @@ table.data td { color: var(--ink-2); }
   <div class="contribs">
     <a class="contrib rise" href="#results">
       <h3><span class="qn">Q1</span>Solver-sufficient symbols</h3>
-      <p>Fixing a symbol leaves an easy problem, an exact LP for contact-rich MILPs or a single descent for learned energies, so planning gets cheaper without losing solution quality.</p>
+      <p>Which decompositions make planning easier? We characterize symbols by the continuous problems that remain once their values are fixed.</p>
     </a>
     <a class="contrib rise" href="#human">
-      <h3><span class="qn">Q2</span>Hardness as commitments</h3>
+      <h3><span class="qn">Q2</span>Which discrete choices matter?</h3>
       <p>The symbols a task needs mark its irreducible discrete decisions, and they explain which human-defined concepts matter for planning.</p>
     </a>
     <a class="contrib rise" href="#steering">
@@ -392,7 +402,7 @@ table.data td { color: var(--ink-2); }
     <div class="sec-head">
       <h2>What makes a symbol solver-sufficient?</h2>
       <div class="lead-col">
-        <p class="lead">Symbols trade search against solving. Too many, such as raw mode variables, make the symbolic search exponential; too few leave the grounded solve hard. Solver-sufficient symbols add commitments only until the grounded solve becomes cheap, and what “cheap” means depends on the solver: a single descent for a learned energy, a single linear program for a contact-rich MILP.</p>
+        <p class="lead">The key is what remains after a discrete choice is fixed. Too many symbol assignments make discrete search expensive; too few can leave hard continuous subproblems. We seek a compact set of commitments that makes each remaining solve tractable. We formalize this in two settings: exact LP relaxations for piecewise-affine systems, and descent-faithful regions for learned neural energies.</p>
       </div>
     </div>
 
@@ -404,7 +414,7 @@ table.data td { color: var(--ink-2); }
       <div class="text">
         <h3>Regions where one descent is enough</h3>
         <div>
-          <p><b>Problem.</b> Minimise a policy energy <span class="m">h<sub>s</sub>(x)</span> over action chunks <span class="m">x</span> in state <span class="m">s</span>, as in diffusion, flow-matching or energy-based policies.</p>
+          <p><b>Problem.</b> Instantiate the trajectory energy <span class="m">E(x)</span> as a learned policy energy <span class="m">h<sub>s</sub>(x)</span> over action chunks <span class="m">x</span> in state <span class="m">s</span>, as in diffusion, flow-matching or energy-based policies.</p>
           <p><b>Symbols.</b> Linear cuts <span class="m">u<sup>⊤</sup>x ≥ b</span>; each symbol value <span class="m">ψ</span> is a region of the action space.</p>
           <p class="guarantee"><b>τ-descent faithful.</b> From any start inside a region, some path that never climbs more than <span class="m">τ</span> above the lowest energy reached so far leads to within <span class="m">τ</span> of the region's minimum.</p>
           <p><b>What it buys.</b> Keeping the best of one confined descent per region lands within <span class="m">τ</span> of the global optimum, with no random restarts. In practice the regions coincide with behaviours, such as passing on the left or on the right, so fixing <span class="m">ψ</span> steers the robot.</p>
