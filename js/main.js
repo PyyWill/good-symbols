@@ -5,6 +5,7 @@
 
   // BibTeX copy
   const copyBtn = document.getElementById('copy-bib');
+  if (copyBtn) copyBtn.hidden = false;
   copyBtn && copyBtn.addEventListener('click', () => {
     const txt = document.getElementById('bibtex').textContent;
     const done = () => { copyBtn.textContent = 'Copied'; setTimeout(() => copyBtn.textContent = 'Copy', 1600); };
@@ -12,6 +13,25 @@
     else selectBib();
   });
   function selectBib() { const r = document.createRange(); r.selectNodeContents(document.getElementById('bibtex')); const s = window.getSelection(); s.removeAllRanges(); s.addRange(r); copyBtn.textContent = 'Selected'; }
+
+  // in-page links jump straight to the target (a smooth scroll would wake every lazy section on the way and land short
+  // of the target as they grow), then keep re-aiming while sections near the target finish loading or the reader scrolls
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]'), id = a && a.getAttribute('href').slice(1);
+    const el = id && document.getElementById(id);
+    if (!el) return;
+    e.preventDefault();
+    try { history.pushState(null, '', '#' + id); } catch (_) {}
+    const aim = () => {
+      const h = document.documentElement, b = h.style.scrollBehavior;
+      h.style.scrollBehavior = 'auto'; window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY); h.style.scrollBehavior = b;
+    };
+    aim();
+    if (!('ResizeObserver' in window)) return;
+    const ro = new ResizeObserver(aim), stop = () => ro.disconnect();
+    ro.observe(document.body); setTimeout(stop, 5000);
+    window.addEventListener('wheel', stop, { once: true, passive: true }); window.addEventListener('touchstart', stop, { once: true, passive: true });
+  });
 
   // the hero first; every other part loads when it comes within about a screen of the viewport
   try { SS.startHero(); } catch (e) { console.warn('hero', e); }
