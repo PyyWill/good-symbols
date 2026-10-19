@@ -252,10 +252,10 @@
         ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.stroke(); ctx.strokeStyle = '#14171d'; ctx.lineWidth = 1.8; ctx.stroke(); ctx.restore();
       }
       // status line under the map
-      if (t < T.b0) { setActive('joint'); setPhase(`<b>Joint solving</b><span>${hits} of ${R} random restarts reach the optimum</span>`); }
-      else if (t < T.c0) { setActive('search'); setPhase(`<b>Symbolic search</b><span>two cuts through the passes make ${M.regions.length} symbols, one per region</span>`); }
+      if (t < T.b0) { setActive('joint'); setPhase(`<b>Continuous search</b><span>${hits} of ${R} random restarts reach the optimum</span>`); }
+      else if (t < T.c0) { setActive('search'); setPhase(`<b>Symbolic search</b><span>two cuts define ${M.regions.length} regions to search over</span>`); }
       else {
-        setActive('grounded'); setPhase(`<b>Grounded solving</b><span>one descent per region; the lowest floor, in ${M.per[win].reg.name}, is the optimum</span>`);
+        setActive('grounded'); setPhase(`<b>Continuous subproblems</b><span>one descent per region; the lowest floor, in ${M.per[win].reg.name}, is the optimum</span>`);
       }
     }
     resize(); window.addEventListener('resize', () => { resize(); if (!raf) draw(lastT); });
