@@ -107,8 +107,6 @@ p { margin: 0; text-wrap: pretty; }
 .btn { font-family: var(--font-ui); font-size: .95rem; display: inline-flex; align-items: center; gap: 8px; padding: 8px 15px 8px 13px; border-radius: 999px;
   border: 1px solid var(--rule); color: var(--ink); text-decoration: none; background: var(--bg); }
 .btn svg { width: 16px; height: 16px; flex: none; }
-.btn .soon { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); border-left: 1px solid var(--rule); padding-left: 8px; }
-.btn[aria-disabled="true"] { cursor: default; }
 a.btn[href]:hover { border-color: var(--sym); color: var(--sym); }
 .hero-intro { margin-top: clamp(26px, 3.6vw, 38px); display: grid; gap: 14px; color: var(--ink-2); }
 .hero-intro b { color: var(--ink); }
@@ -346,7 +344,7 @@ table.data td { color: var(--ink-2); }
   <div class="links">
     <a class="btn" href="https://arxiv.org/pdf/2610.23010" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 1.5h5.5L13 5v9.5H4z"/><path d="M9.5 1.5V5H13"/><path d="M6 8.5h5M6 11h5"/></svg>Paper</a>
     <a class="btn" href="https://arxiv.org/abs/2610.23010" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 2.5l10 11M13 2.5l-10 11"/></svg>arXiv</a>
-    <a class="btn" aria-disabled="true" role="link" tabindex="0" title="Coming soon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5.5 4L2 8l3.5 4M10.5 4L14 8l-3.5 4"/></svg>Code<span class="soon">soon</span></a>
+    <a class="btn" href="https://github.com/PyyWill/good-symbols" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5.5 4L2 8l3.5 4M10.5 4L14 8l-3.5 4"/></svg>Code</a>
     <a class="btn" href="#citation"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 2.5H4.5Q3 2.5 3 4v2.5Q3 8 1.8 8Q3 8 3 9.5V12q0 1.5 1.5 1.5H6M10 2.5h1.5Q13 2.5 13 4v2.5Q13 8 14.2 8Q13 8 13 9.5V12q0 1.5-1.5 1.5H10"/></svg>BibTeX</a>
   </div>
   <div class="hero-intro">
