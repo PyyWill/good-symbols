@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "W": [
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "nodes": [
+    [
+      1,
+      0,
+      -1,
+      0,
+      -1
+    ]
+  ],
+  "edges": [
+    [
+      0,
+      0
+    ]
+  ],
+  "rule": "Executed successful-demo edges plus native-LP-validated saved horizon edges; no synthetic edges.",
+  "demonstrations_sha256": "b6362cbd1d76d8e43bac8085a003f4e437fb96bb24ecff0526c122858ba6bf1b"
+}

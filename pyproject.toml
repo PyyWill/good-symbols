@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "good-symbols"
+version = "0.1.0"
+description = "What Makes a Good Symbol for Hybrid Discrete-Continuous Planning? Solver-sufficient symbols for PWA systems."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "Yiyuan Pan" }, { name = "Changliu Liu" }, { name = "Jiayuan Mao" }]
+dependencies = ["numpy>=1.26", "scipy>=1.11", "highspy>=1.7", "pymunk>=6.6"]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.urls]
+Paper = "https://arxiv.org/abs/2610.23010"
+Homepage = "https://pyywill.github.io/good-symbols/"
+Repository = "https://github.com/PyyWill/good-symbols"
+
+[tool.setuptools.packages.find]
+include = ["good_symbols*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
